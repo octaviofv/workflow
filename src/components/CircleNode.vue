@@ -6,14 +6,33 @@
   >
     <!-- Label & Icon -->
     <div class="node-content">
-      <i v-if="icon" :class="icon" class="node-icon"></i>
-      <span class="node-label">{{ label }}</span>
+      <div class="node-icon">
+        <svg v-if="type === 'start'" viewBox="0 0 24 24" class="start-icon">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+        <svg v-else viewBox="0 0 24 24" class="end-icon">
+          <path d="M6 6h12v12H6z" />
+        </svg>
+      </div>
+      <span class="node-label">{{ type === 'start' ? 'Start' : 'End' }}</span>
     </div>
 
     <!-- Connection Handles -->
     <div class="node-handles">
-      <Handle v-if="type === 'event-start'" id="source-handle" type="source" position="right" />
-      <Handle v-if="type === 'event-end'" id="target-handle" type="target" position="left" />
+      <Handle 
+        v-if="type === 'start'" 
+        id="source-handle" 
+        type="source" 
+        position="right"
+        :isValidConnection="validateStartConnection"
+      />
+      <Handle 
+        v-if="type === 'end'" 
+        id="target-handle" 
+        type="target" 
+        position="left"
+        :isValidConnection="validateEndConnection"
+      />
     </div>
   </div>
 </template>
@@ -31,34 +50,35 @@ export default {
     type: {
       type: String,
       required: true,
-      validator: (value) => ['event-start', 'event-end'].includes(value),
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    icon: {
-      type: String,
-      default: '',
+      validator: (value) => ['start', 'end'].includes(value),
     },
     selected: {
       type: Boolean,
       default: false,
     },
-    backgroundColor: {
-      type: String,
-      default: '#ffffff',
-    },
   },
   setup(props) {
-    // Dynamic node style based on backgroundColor
     const computedNodeStyle = computed(() => ({
-      backgroundColor: props.backgroundColor || '#ffffff',
-      borderColor: props.selected ? '#2196F3' : 'currentColor',
+      backgroundColor: props.type === 'start' ? '#4CAF50' : '#F44336',
+      borderColor: props.selected ? '#2196F3' : props.type === 'start' ? '#388E3C' : '#D32F2F',
     }));
+
+    // Validate connections for start nodes
+    const validateStartConnection = ({ source, target, sourceHandle, targetHandle }) => {
+      // Start node can only have outgoing connections
+      return sourceHandle && !targetHandle;
+    };
+
+    // Validate connections for end nodes
+    const validateEndConnection = ({ source, target, sourceHandle, targetHandle }) => {
+      // End node can only have incoming connections
+      return targetHandle && !sourceHandle;
+    };
 
     return {
       computedNodeStyle,
+      validateStartConnection,
+      validateEndConnection,
     };
   },
 };
@@ -66,49 +86,61 @@ export default {
 
 <style lang="scss" scoped>
 .circle-node {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: 2px solid currentColor;
+  border: 3px solid;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition: all 0.3s ease;
+  color: white;
 
   &.selected {
-    border-color: #2196f3;
-    box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.5);
   }
 
-  &.node-type-event-start {
-    color: #4caf50;
+  &.node-type-start {
+    .node-icon svg {
+      fill: white;
+      width: 24px;
+      height: 24px;
+    }
   }
 
-  &.node-type-event-end {
-    color: #f44336;
+  &.node-type-end {
+    .node-icon svg {
+      fill: white;
+      width: 20px;
+      height: 20px;
+    }
   }
 
   .node-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
     gap: 4px;
   }
 
   .node-icon {
-    font-size: 18px;
-    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
   }
 
   .node-label {
     font-size: 12px;
+    font-weight: 600;
     white-space: nowrap;
     position: absolute;
-    bottom: -20px;
+    bottom: -24px;
     left: 50%;
     transform: translateX(-50%);
+    color: #333;
   }
 
   .node-handles {
@@ -121,15 +153,28 @@ export default {
 
     :deep(.vue-flow__handle) {
       pointer-events: all;
-      width: 8px;
-      height: 8px;
-      border: 2px solid white;
-      background: currentColor;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2px solid currentColor;
       border-radius: 50%;
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
 
       &:hover {
         transform: scale(1.2);
+        background: #e3f2fd;
+      }
+
+      &.vue-flow__handle-connecting {
+        background: #2196F3;
+      }
+
+      &.vue-flow__handle-valid {
+        background: #4CAF50;
+      }
+
+      &.vue-flow__handle-invalid {
+        background: #F44336;
       }
     }
   }
