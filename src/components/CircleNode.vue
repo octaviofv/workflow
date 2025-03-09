@@ -4,13 +4,11 @@
     :class="[`node-type-${type}`, { selected }]"
     :style="computedNodeStyle"
   >
-    <!-- Label & Icon -->
     <div class="node-content">
       <i v-if="icon" :class="icon" class="node-icon"></i>
       <span class="node-label">{{ label }}</span>
     </div>
 
-    <!-- Connection Handles -->
     <div class="node-handles">
       <Handle v-if="type === 'event-start'" id="source-handle" type="source" position="right" />
       <Handle v-if="type === 'event-end'" id="target-handle" type="target" position="left" />
@@ -51,10 +49,9 @@ export default {
     },
   },
   setup(props) {
-    // Dynamic node style based on backgroundColor
     const computedNodeStyle = computed(() => ({
       backgroundColor: props.backgroundColor || '#ffffff',
-      borderColor: props.selected ? '#2196F3' : 'currentColor',
+      borderColor: props.selected ? '#6366F1' : '#E5E7EB',
     }));
 
     return {
@@ -66,27 +63,29 @@ export default {
 
 <style lang="scss" scoped>
 .circle-node {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 2px solid currentColor;
+  border: 1px solid #E5E7EB;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   &.selected {
-    border-color: #2196f3;
-    box-shadow: 0 0 8px rgba(33, 150, 243, 0.5);
+    border-color: #6366F1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
   }
 
   &.node-type-event-start {
-    color: #4caf50;
+    color: #10B981;
   }
 
   &.node-type-event-end {
-    color: #f44336;
+    color: #EF4444;
   }
 
   .node-content {
@@ -94,21 +93,22 @@ export default {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 4px;
+    gap: 2px;
   }
 
   .node-icon {
-    font-size: 18px;
+    font-size: 14px;
     margin: 0;
   }
 
   .node-label {
-    font-size: 12px;
+    font-size: 11px;
     white-space: nowrap;
     position: absolute;
     bottom: -20px;
     left: 50%;
     transform: translateX(-50%);
+    color: #6B7280;
   }
 
   .node-handles {
@@ -121,14 +121,15 @@ export default {
 
     :deep(.vue-flow__handle) {
       pointer-events: all;
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
+      background: #E5E7EB;
       border: 2px solid white;
-      background: currentColor;
       border-radius: 50%;
-      transition: transform 0.2s ease;
+      transition: all 0.2s ease;
 
       &:hover {
+        background: #6366F1;
         transform: scale(1.2);
       }
     }
