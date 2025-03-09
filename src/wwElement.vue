@@ -25,7 +25,7 @@
           <CircleNode v-bind="nodeProps" />
         </template>
 
-        <Background :pattern-color="#E5E7EB" :gap="backgroundGap" />
+        <Background :pattern-color="backgroundColor" :gap="backgroundGap" />
         <Controls />
         <MiniMap v-if="showMinimap" />
       </VueFlow>
@@ -231,10 +231,9 @@ export default {
 .flowchart-container {
   width: 100%;
   position: relative;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
-  background: #ffffff;
 }
 
 .flowchart-wrapper {
@@ -249,7 +248,6 @@ export default {
 .flowchart {
   flex-grow: 1;
   height: 100%;
-  background: #ffffff;
 
   :deep(.vue-flow__node) {
     width: auto;
@@ -257,61 +255,21 @@ export default {
   }
 
   :deep(.vue-flow__handle) {
-    width: 6px;
-    height: 6px;
-    background: #E5E7EB;
+    width: 8px;
+    height: 8px;
+    background: #2196F3;
     border: 2px solid white;
   }
 
   :deep(.vue-flow__edge-path) {
-    stroke: #9CA3AF;
-    stroke-width: 1;
-  }
-
-  :deep(.vue-flow__edge.animated) {
-    path {
-      stroke-dasharray: 5;
-      animation: dashdraw 5s linear infinite;
-    }
-  }
-
-  :deep(.vue-flow__controls) {
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    background: white;
-    padding: 4px;
-
-    button {
-      background: #ffffff;
-      border: none;
-      border-radius: 4px;
-      color: #4B5563;
-      width: 24px;
-      height: 24px;
-      margin: 2px;
-
-      &:hover {
-        background: #F3F4F6;
-      }
-
-      svg {
-        width: 14px;
-        height: 14px;
-      }
-    }
-  }
-
-  :deep(.vue-flow__minimap) {
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    background: white;
+    stroke: #2196F3;
+    stroke-width: 2;
   }
 }
 
-@keyframes dashdraw {
-  from {
-    stroke-dashoffset: 10;
-  }
+.flowchart-sidebar {
+  flex-shrink: 0;
+  height: 100%;
+  border-left: 1px solid #ddd;
 }
 </style>

@@ -86,40 +86,39 @@ export default {
   min-width: 280px;
   position: relative;
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 12px;
   transition: all 0.2s ease;
-  border: 1px solid #E5E7EB;
+  border: 2px solid #EAEAEA;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   
   &.selected {
-    border-color: #6366F1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    border-color: #0445AF;
+    box-shadow: 0 4px 12px rgba(4, 69, 175, 0.1);
   }
 
   &:hover {
-    border-color: #6366F1;
+    border-color: #0445AF;
   }
 }
 
 .note-content {
   display: flex;
   align-items: flex-start;
-  padding: 16px;
-  gap: 12px;
+  padding: 20px;
+  gap: 16px;
 }
 
 .node-number {
-  width: 24px;
-  height: 24px;
-  background-color: #F3F4F6;
-  color: #4B5563;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  background-color: #0445AF;
+  color: white;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
-  font-size: 12px;
+  font-weight: 600;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
@@ -128,17 +127,17 @@ export default {
 }
 
 .note-title {
-  font-weight: 500;
-  font-size: 14px;
-  color: #111827;
-  margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #262627;
+  margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .note-text {
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.5;
-  color: #6B7280;
+  color: #666666;
   white-space: pre-wrap;
   word-break: break-word;
 }
@@ -153,32 +152,33 @@ export default {
 
   :deep(.vue-flow__handle) {
     pointer-events: all;
-    width: 8px;
-    height: 8px;
-    background: #E5E7EB;
+    width: 12px;
+    height: 12px;
+    background: #0445AF;
     border: 2px solid #ffffff;
     border-radius: 50%;
     transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(4, 69, 175, 0.2);
 
     &:hover {
-      background: #6366F1;
       transform: scale(1.2);
+      background: #0056D6;
     }
 
     &.vue-flow__handle-top {
-      top: -4px;
+      top: -6px;
     }
 
     &.vue-flow__handle-right {
-      right: -4px;
+      right: -6px;
     }
 
     &.vue-flow__handle-bottom {
-      bottom: -4px;
+      bottom: -6px;
     }
 
     &.vue-flow__handle-left {
-      left: -4px;
+      left: -6px;
     }
   }
 }
