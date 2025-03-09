@@ -6,12 +6,12 @@
   >
     <div class="node-content">
       <i v-if="icon" :class="icon" class="node-icon"></i>
-      <span class="node-label">{{ label }}</span>
+      <span v-if="label" class="node-label">{{ label }}</span>
     </div>
 
     <div class="node-handles">
-      <Handle v-if="type === 'event-start'" id="source-handle" type="source" position="right" />
-      <Handle v-if="type === 'event-end'" id="target-handle" type="target" position="left" />
+      <Handle v-if="type === 'event-start'" id="source-handle" type="source" position="right" :style="handleStyle" />
+      <Handle v-if="type === 'event-end'" id="target-handle" type="target" position="left" :style="handleStyle" />
     </div>
   </div>
 </template>
@@ -52,10 +52,18 @@ export default {
     const computedNodeStyle = computed(() => ({
       backgroundColor: props.backgroundColor || '#ffffff',
       borderColor: props.selected ? '#6366F1' : '#E5E7EB',
+      cursor: 'pointer',
+    }));
+
+    const handleStyle = computed(() => ({
+      width: '10px',
+      height: '10px',
+      background: props.selected ? '#6366F1' : '#E5E7EB',
     }));
 
     return {
       computedNodeStyle,
+      handleStyle,
     };
   },
 };
@@ -63,8 +71,10 @@ export default {
 
 <style lang="scss" scoped>
 .circle-node {
-  width: 40px;
-  height: 40px;
+  min-width: 50px;
+  min-height: 50px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: 1px solid #E5E7EB;
   display: flex;
@@ -92,13 +102,17 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
     text-align: center;
-    gap: 2px;
+    gap: 4px;
   }
 
   .node-icon {
-    font-size: 14px;
+    font-size: 16px;
     margin: 0;
+    line-height: 1;
   }
 
   .node-label {
