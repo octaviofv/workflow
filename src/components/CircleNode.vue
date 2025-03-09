@@ -5,8 +5,9 @@
     :style="computedNodeStyle"
   >
     <div class="node-content">
-      <i v-if="icon" :class="icon" class="node-icon"></i>
-      <span v-if="label" class="node-label">{{ label }}</span>
+      <i v-if="type === 'event-start'" class="fas fa-play node-icon"></i>
+      <i v-if="type === 'event-end'" class="fas fa-stop node-icon"></i>
+      <span class="node-label">{{ type === 'event-start' ? 'Inicio' : 'Fin' }}</span>
     </div>
 
     <div class="node-handles">
@@ -31,34 +32,22 @@ export default {
       required: true,
       validator: (value) => ['event-start', 'event-end'].includes(value),
     },
-    label: {
-      type: String,
-      default: '',
-    },
-    icon: {
-      type: String,
-      default: '',
-    },
     selected: {
       type: Boolean,
       default: false,
-    },
-    backgroundColor: {
-      type: String,
-      default: '#ffffff',
-    },
+    }
   },
   setup(props) {
     const computedNodeStyle = computed(() => ({
-      backgroundColor: props.backgroundColor || '#ffffff',
-      borderColor: props.selected ? '#6366F1' : '#E5E7EB',
+      backgroundColor: props.type === 'event-start' ? '#ECFDF5' : '#FEF2F2',
+      borderColor: props.selected ? '#6366F1' : props.type === 'event-start' ? '#10B981' : '#EF4444',
       cursor: 'pointer',
     }));
 
     const handleStyle = computed(() => ({
-      width: '10px',
-      height: '10px',
-      background: props.selected ? '#6366F1' : '#E5E7EB',
+      width: '8px',
+      height: '8px',
+      background: props.selected ? '#6366F1' : props.type === 'event-start' ? '#10B981' : '#EF4444',
     }));
 
     return {
@@ -71,31 +60,40 @@ export default {
 
 <style lang="scss" scoped>
 .circle-node {
-  min-width: 50px;
-  min-height: 50px;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  border: 1px solid #E5E7EB;
+  border: 2px solid;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   transition: all 0.2s ease;
-  background: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 
   &.selected {
     border-color: #6366F1;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
   }
 
   &.node-type-event-start {
-    color: #10B981;
+    .node-icon {
+      color: #10B981;
+    }
+    
+    .node-label {
+      color: #10B981;
+    }
   }
 
   &.node-type-event-end {
-    color: #EF4444;
+    .node-icon {
+      color: #EF4444;
+    }
+    
+    .node-label {
+      color: #EF4444;
+    }
   }
 
   .node-content {
@@ -103,26 +101,19 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    text-align: center;
     gap: 4px;
   }
 
   .node-icon {
-    font-size: 16px;
+    font-size: 18px;
     margin: 0;
     line-height: 1;
   }
 
   .node-label {
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 500;
     white-space: nowrap;
-    position: absolute;
-    bottom: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #6B7280;
   }
 
   .node-handles {
@@ -135,15 +126,13 @@ export default {
 
     :deep(.vue-flow__handle) {
       pointer-events: all;
-      width: 6px;
-      height: 6px;
-      background: #E5E7EB;
+      width: 8px;
+      height: 8px;
       border: 2px solid white;
       border-radius: 50%;
       transition: all 0.2s ease;
 
       &:hover {
-        background: #6366F1;
         transform: scale(1.2);
       }
     }
