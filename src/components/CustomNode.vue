@@ -1,16 +1,43 @@
 <template>
   <div 
-    class="note-node" 
+    class="custom-node" 
     :class="{ selected }"
-    :style="{ backgroundColor: data.backgroundColor || '#ffffff' }"
+    @dblclick="startEditing"
   >
-    <div class="note-content">
-      <div class="node-number">{{ data.number || '1' }}</div>
-      <div class="content-wrapper">
-        <div class="note-title">{{ data.label || 'Question' }}</div>
-        <div class="note-text">{{ data.content || '' }}</div>
+    <div class="node-header">
+      <div class="node-icon">
+        <div class="node-number">{{ data.number || '1' }}</div>
       </div>
+      <div class="node-title" v-if="!isEditing">{{ data.label || 'Action' }}</div>
+      <input
+        v-else
+        v-model="editedLabel"
+        class="edit-input"
+        @keyup.enter="saveChanges"
+        @keyup.esc="cancelEdit"
+        ref="labelInput"
+        placeholder="Enter title"
+      />
+      <div class="node-type">{{ data.type || 'Custom' }}</div>
     </div>
+    
+    <div class="node-content">
+      <div class="content-text" v-if="!isEditing">{{ data.content || '' }}</div>
+      <textarea
+        v-else
+        v-model="editedContent"
+        class="edit-textarea"
+        @keyup.esc="cancelEdit"
+        ref="contentTextarea"
+        placeholder="Enter content"
+      ></textarea>
+    </div>
+
+    <div v-if="isEditing" class="edit-actions">
+      <button class="save-button" @click="saveChanges">Save</button>
+      <button class="cancel-button" @click="cancelEdit">Cancel</button>
+    </div>
+
     <div class="node-handles">
       <Handle
         v-for="handle in handles"
@@ -45,19 +72,9 @@ export default {
       type: Boolean,
       default: false,
     },
-    isReadOnly: {
-      type: Boolean,
-      default: true,
-    }
   },
   emits: ['update:data'],
   setup(props, { emit }) {
-    const localContent = ref(props.data.content || '');
-
-    watch(() => props.data.content, (newContent) => {
-      localContent.value = newContent || '';
-    });
-
     const handles = [
       { id: 'top', type: 'target', position: 'top' },
       { id: 'right', type: 'source', position: 'right' },
@@ -65,81 +82,203 @@ export default {
       { id: 'left', type: 'target', position: 'left' },
     ];
 
-    const updateContent = () => {
-      emit('update:data', {
-        ...props.data,
-        content: localContent.value
-      });
+    const isEditing = ref(false);
+    const editedLabel = ref('');
+    const editedContent = ref('');
+    const labelInput = ref(null);
+    const contentTextarea = ref(null);
+
+    const startEditing = () => {
+      editedLabel.value = props.data.label || '';
+      editedContent.value = props.data.content || '';
+      isEditing.value = true;
+      
+      setTimeout(() => {
+        labelInput.value?.focus();
+      }, 0);
     };
+
+    const saveChanges = () => {
+      const updatedData = {
+        ...props.data,
+        label: editedLabel.value,
+        content: editedContent.value,
+      };
+      
+      emit('update:data', props.id, updatedData);
+      isEditing.value = false;
+    };
+
+    const cancelEdit = () => {
+      isEditing.value = false;
+    };
+
+    const handleClickOutside = (event) => {
+      if (isEditing.value && !event.target.closest('.custom-node')) {
+        saveChanges();
+      }
+    };
+
+    watch(isEditing, (newValue) => {
+      if (newValue) {
+        document.addEventListener('click', handleClickOutside);
+      } else {
+        document.removeEventListener('click', handleClickOutside);
+      }
+    });
 
     return {
       handles,
-      localContent,
-      updateContent
+      isEditing,
+      editedLabel,
+      editedContent,
+      labelInput,
+      contentTextarea,
+      startEditing,
+      saveChanges,
+      cancelEdit,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.note-node {
+.custom-node {
   min-width: 280px;
-  position: relative;
-  background-color: #ffffff;
+  background: white;
   border-radius: 12px;
-  transition: all 0.2s ease;
-  border: 2px solid #EAEAEA;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E5E7EB;
   overflow: hidden;
-  
+  transition: all 0.2s ease;
+
   &.selected {
-    border-color: #0445AF;
-    box-shadow: 0 4px 12px rgba(4, 69, 175, 0.1);
-  }
-
-  &:hover {
-    border-color: #0445AF;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
   }
 }
 
-.note-content {
+.node-header {
   display: flex;
-  align-items: flex-start;
-  padding: 20px;
-  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+  gap: 12px;
 }
 
-.node-number {
+.node-icon {
   width: 32px;
   height: 32px;
-  background-color: #0445AF;
-  color: white;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 14px;
+  background: #3B82F6;
+  border-radius: 8px;
   flex-shrink: 0;
 }
 
-.content-wrapper {
+.node-number {
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.node-title {
+  font-weight: 500;
+  color: #111827;
+  font-size: 14px;
   flex-grow: 1;
 }
 
-.note-title {
-  font-weight: 600;
-  font-size: 16px;
-  color: #262627;
-  margin-bottom: 8px;
-  line-height: 1.4;
+.node-type {
+  font-size: 12px;
+  color: #6B7280;
+  padding: 4px 8px;
+  background: #F3F4F6;
+  border-radius: 4px;
 }
 
-.note-text {
+.node-content {
+  padding: 12px 16px;
+}
+
+.content-text {
   font-size: 14px;
+  color: #4B5563;
   line-height: 1.5;
-  color: #666666;
   white-space: pre-wrap;
-  word-break: break-word;
+}
+
+.edit-input {
+  flex-grow: 1;
+  padding: 6px 8px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  background: white;
+  margin-right: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.edit-textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #111827;
+  resize: vertical;
+  background: white;
+
+  &:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px 16px;
+  justify-content: flex-end;
+
+  button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &.save-button {
+      background: #3B82F6;
+      color: white;
+      border: none;
+
+      &:hover {
+        background: #2563EB;
+      }
+    }
+
+    &.cancel-button {
+      background: white;
+      color: #4B5563;
+      border: 1px solid #D1D5DB;
+
+      &:hover {
+        background: #F3F4F6;
+      }
+    }
+  }
 }
 
 .node-handles {
@@ -151,34 +290,31 @@ export default {
   pointer-events: none;
 
   :deep(.vue-flow__handle) {
-    pointer-events: all;
     width: 12px;
     height: 12px;
-    background: #0445AF;
-    border: 2px solid #ffffff;
+    background: white;
+    border: 2px solid #3B82F6;
     border-radius: 50%;
+    pointer-events: all;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 4px rgba(4, 69, 175, 0.2);
 
     &:hover {
+      background: #DBEAFE;
       transform: scale(1.2);
-      background: #0056D6;
     }
 
-    &.vue-flow__handle-top {
-      top: -6px;
+    &.vue-flow__handle-connecting {
+      background: #3B82F6;
     }
 
-    &.vue-flow__handle-right {
-      right: -6px;
+    &.vue-flow__handle-valid {
+      background: #10B981;
+      border-color: #059669;
     }
 
-    &.vue-flow__handle-bottom {
-      bottom: -6px;
-    }
-
-    &.vue-flow__handle-left {
-      left: -6px;
+    &.vue-flow__handle-invalid {
+      background: #EF4444;
+      border-color: #DC2626;
     }
   }
 }

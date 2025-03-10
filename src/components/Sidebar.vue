@@ -16,7 +16,7 @@
       </div>
 
       <div
-        class="draggable-node"      
+        class="draggable-node"
         draggable="true"
         @dragstart="onDragStart($event, 'custom', 'statement')"
       >
@@ -24,6 +24,23 @@
           <div class="preview-number">S</div>
           <div class="preview-content">
             <span>Declaración</span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="draggable-node"
+        draggable="true"
+        @dragstart="onDragStart($event, 'http-request', 'request')"
+      >
+        <div class="preview-node">
+          <div class="preview-number">
+            <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; fill: white;">
+              <path d="M17 16.44v3.25c0 .41-.34.75-.75.75h-8.5c-.41 0-.75-.34-.75-.75v-3.25c0-.41.34-.75.75-.75h8.5c.41 0 .75.34.75.75zm0-8.44v3.25c0 .41-.34.75-.75.75h-8.5c-.41 0-.75-.34-.75-.75V8c0-.41.34-.75.75-.75h8.5c.41 0 .75.34.75.75zm2-3.75H5c-.55 0-1 .45-1 1v13.5c0 .55.45 1 1 1h14c.55 0 1-.45 1-1V5.25c0-.55-.45-1-1-1z"/>
+            </svg>
+          </div>
+          <div class="preview-content">
+            <span>HTTP Request</span>
           </div>
         </div>
       </div>
@@ -38,13 +55,29 @@ export default {
     const onDragStart = (event, nodeType, variant) => {
       let nodeData = {
         type: nodeType,
-        data: {
+        data: {}
+      };
+
+      if (nodeType === 'custom') {
+        nodeData.data = {
           label: variant === 'question' ? 'Nueva Pregunta' : 'Nueva Declaración',
           content: '',
           number: variant === 'question' ? 'Q' : 'S',
           backgroundColor: variant === 'question' ? '#ffffff' : '#f8f9fa',
-        },
-      };
+        };
+      } else if (nodeType === 'http-request') {
+        nodeData.data = {
+          label: 'HTTP Request',
+          method: 'GET',
+          url: '',
+          headers: [],
+          auth: { type: 'none' },
+          timeout: 5000,
+          retry: { attempts: 3, delay: 1000 },
+          validateSSL: true,
+          cacheResponse: false
+        };
+      }
 
       event.dataTransfer.setData('application/vueflow', JSON.stringify(nodeData));
       event.dataTransfer.effectAllowed = 'move';
