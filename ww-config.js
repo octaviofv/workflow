@@ -1,143 +1,292 @@
 export default {
-  backgroundColor: {
-    label: { en: 'Background Color' },
-    type: 'Color',
-    section: 'style',
-    bindable: true,
-    defaultValue: '#ffffff',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'Set the background color of the flow chart',
+  editor: {
+    label: {
+      en: 'Flow Chart',
     },
-    propertyHelp: {
-      tooltip: 'Define the background color of the flow chart container',
-    },
-    /* wwEditor:end */
+    icon: 'workflow',
   },
+  properties: {
+    backgroundColor: {
+      label: { en: 'Background Color' },
+      type: 'Color',
+      section: 'style',
+      bindable: true,
+      defaultValue: '#ffffff',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'Set the background color of the flow chart',
+      },
+      propertyHelp: {
+        tooltip: 'Define the background color of the flow chart container',
+      },
+      /* wwEditor:end */
+    },
 
-  backgroundGap: {
-    label: { en: 'Background Grid Gap' },
-    type: 'Number',
-    section: 'style',
-    bindable: true,
-    defaultValue: 20,
-    options: {
-      min: 10,
-      max: 100,
-      step: 5,
+    backgroundGap: {
+      label: { en: 'Background Grid Gap' },
+      type: 'Number',
+      section: 'style',
+      bindable: true,
+      defaultValue: 20,
+      options: {
+        min: 10,
+        max: 100,
+        step: 5,
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'The gap between background grid lines (in pixels)',
+      },
+      propertyHelp: {
+        tooltip: 'Set the spacing between background grid lines',
+      },
+      /* wwEditor:end */
     },
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'number',
-      tooltip: 'The gap between background grid lines (in pixels)',
-    },
-    propertyHelp: {
-      tooltip: 'Set the spacing between background grid lines',
-    },
-    /* wwEditor:end */
-  },
 
-  width: {
-    label: { en: 'Width' },
-    type: 'Length',
-    section: 'settings',
-    bindable: true,
-    defaultValue: '100%',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'The width of the flow chart container (e.g., "100%", "500px")',
+    width: {
+      label: { en: 'Width' },
+      type: 'Length',
+      section: 'settings',
+      bindable: true,
+      defaultValue: '100%',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'The width of the flow chart container (e.g., "100%", "500px")',
+      },
+      propertyHelp: {
+        tooltip: 'Set the width of the flow chart container',
+      },
+      /* wwEditor:end */
     },
-    propertyHelp: {
-      tooltip: 'Set the width of the flow chart container',
-    },
-    /* wwEditor:end */
-  },
 
-  height: {
-    label: { en: 'Height' },
-    type: 'Length',
-    section: 'settings',
-    bindable: true,
-    defaultValue: '500px',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'The height of the flow chart container (e.g., "500px", "80vh")',
+    height: {
+      label: { en: 'Height' },
+      type: 'Length',
+      section: 'settings',
+      bindable: true,
+      defaultValue: '500px',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'The height of the flow chart container (e.g., "500px", "80vh")',
+      },
+      propertyHelp: {
+        tooltip: 'Set the height of the flow chart container',
+      },
+      /* wwEditor:end */
     },
-    propertyHelp: {
-      tooltip: 'Set the height of the flow chart container',
-    },
-    /* wwEditor:end */
-  },
 
-  nodes: {
-    label: { en: 'Initial Flow' },
-    type: 'object', // Cambiado a minúscula
-    section: 'settings',
-    bindable: true, // Añadido bindable: true
-    defaultValue: {
-      nodes: [
-        {
-          id: 'input',
-          type: 'custom',
-          position: { x: 100, y: 100 },
-          data: {
-            label: 'Entrada',
-            content: 'Información de entrada',
-            number: '1',
-            backgroundColor: '#E3F2FD'
+    flowData: {
+      label: { en: 'Flow Data' },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: JSON.stringify({
+        nodes: [
+          {
+            id: 'input',
+            type: 'custom',
+            position: { x: 100, y: 100 },
+            data: {
+              label: 'Entrada',
+              content: 'Información de entrada',
+              number: '1',
+              backgroundColor: '#E3F2FD'
+            }
+          },
+          {
+            id: 'process',
+            type: 'custom',
+            position: { x: 400, y: 100 },
+            data: {
+              label: 'Proceso',
+              content: 'Procesamiento de información',
+              number: '2',
+              backgroundColor: '#F3E5F5'
+            }
+          },
+          {
+            id: 'output',
+            type: 'custom',
+            position: { x: 700, y: 100 },
+            data: {
+              label: 'Salida',
+              content: 'Información de salida',
+              number: '3',
+              backgroundColor: '#E8F5E9'
+            }
           }
+        ],
+        edges: [
+          {
+            id: 'e1-2',
+            source: 'input',
+            target: 'process',
+            type: 'smoothstep',
+            animated: true
+          },
+          {
+            id: 'e2-3',
+            source: 'process',
+            target: 'output',
+            type: 'smoothstep',
+            animated: true
+          }
+        ]
+      }),
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'A JSON string containing nodes and edges data for the flow chart',
+      },
+      propertyHelp: {
+        tooltip: 'The flow chart structure defined as a JSON string with nodes and their connections',
+      },
+      /* wwEditor:end */
+    },
+
+    defaultZoom: {
+      label: { en: 'Default Zoom' },
+      type: 'Number',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 1,
+      options: {
+        min: 0.1,
+        max: 4,
+        step: 0.1,
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'The default zoom level (between 0.1 and 4)',
+      },
+      propertyHelp: {
+        tooltip: 'Set the initial zoom level of the flow chart',
+      },
+      /* wwEditor:end */
+    },
+
+    minZoom: {
+      label: { en: 'Min Zoom' },
+      type: 'Number',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 0.1,
+      options: {
+        min: 0.1,
+        max: 1,
+        step: 0.1,
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'The minimum allowed zoom level (between 0.1 and 1)',
+      },
+      propertyHelp: {
+        tooltip: 'Set the minimum zoom level allowed',
+      },
+      /* wwEditor:end */
+    },
+
+    maxZoom: {
+      label: { en: 'Max Zoom' },
+      type: 'Number',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 4,
+      options: {
+        min: 1,
+        max: 10,
+        step: 0.1,
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'number',
+        tooltip: 'The maximum allowed zoom level (between 1 and 10)',
+      },
+      propertyHelp: {
+        tooltip: 'Set the maximum zoom level allowed',
+      },
+      /* wwEditor:end */
+    },
+
+    showMinimap: {
+      label: { en: 'Show Minimap' },
+      type: 'OnOff',
+      section: 'settings',
+      bindable: true,
+      defaultValue: true,
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'boolean',
+        tooltip: 'Toggle the minimap visibility',
+      },
+      propertyHelp: {
+        tooltip: 'Show or hide the minimap overview',
+      },
+      /* wwEditor:end */
+    },
+  },
+  triggerEvents: [
+    {
+      name: 'nodeAdded',
+      label: { en: 'On Node Added' },
+      event: { node: null },
+    },
+    {
+      name: 'nodeSelected',
+      label: { en: 'On Node Selected' },
+      event: { node: null },
+    },
+    {
+      name: 'nodeDeleted',
+      label: { en: 'On Node Deleted' },
+      event: {},
+    },
+    {
+      name: 'nodeUpdated',
+      label: { en: 'On Node Updated' },
+      event: { node: null },
+    },
+    {
+      name: 'connectionCreated',
+      label: { en: 'On Connection Created' },
+      event: { connection: null },
+    },
+    {
+      name: 'selectionCleared',
+      label: { en: 'On Selection Cleared' },
+      event: {},
+    },
+  ],
+  actions: [
+    {
+      name: 'addNode',
+      label: { en: 'Add Node' },
+    },
+    {
+      name: 'deleteSelected',
+      label: { en: 'Delete Selected' },
+    },
+    {
+      name: 'updateNodeData',
+      label: { en: 'Update Node Data' },
+      args: [
+        {
+          name: 'nodeId',
+          type: 'string',
+          label: { en: 'Node ID' },
         },
         {
-          id: 'process',
-          type: 'custom',
-          position: { x: 400, y: 100 },
-          data: {
-            label: 'Proceso',
-            content: 'Procesamiento de información',
-            number: '2',
-            backgroundColor: '#F3E5F5'
-          }
+          name: 'data',
+          type: 'object',
+          label: { en: 'Node Data' },
         },
-        {
-          id: 'output',
-          type: 'custom',
-          position: { x: 700, y: 100 },
-          data: {
-            label: 'Salida',
-            content: 'Información de salida',
-            number: '3',
-            backgroundColor: '#E8F5E9'
-          }
-        }
       ],
-      edges: [
-        {
-          id: 'e1-2',
-          source: 'input',
-          target: 'process',
-          type: 'smoothstep',
-          animated: true
-        },
-        {
-          id: 'e2-3',
-          source: 'process',
-          target: 'output',
-          type: 'smoothstep',
-          animated: true
-        }
-      ]
     },
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'object',
-      tooltip: 'The initial flow configuration with nodes and edges',
-    },
-    propertyHelp: {
-      tooltip: 'Define the default flow structure that will be loaded initially',
-    },
-    /* wwEditor:end */
-  }
+  ],
 };
