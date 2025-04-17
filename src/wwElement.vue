@@ -80,6 +80,7 @@ export default {
     const initialized = ref(false);
     const elements = ref([]);
     const selectedNode = ref(null);
+    const pendingChanges = ref(false);
 
     const isEditing = computed(() => {
       /* wwEditor:start */
@@ -182,6 +183,7 @@ export default {
             ...(parsedData.nodes || []),
             ...(parsedData.edges || [])
           ];
+          pendingChanges.value = false;
         }
       } catch (error) {
         console.error('Error parsing flow data:', error);
@@ -206,12 +208,13 @@ export default {
           flowData: stringifiedData
         };
         emit('update:content', updatedContent);
+        pendingChanges.value = false;
       }
     };
 
     // Watch for changes in elements
     watch(elements, () => {
-      updateFlowData();
+      pendingChanges.value = true;
     }, { deep: true });
 
     onMounted(() => {
@@ -263,6 +266,7 @@ export default {
 
       addNodes([newNode]);
       emit('trigger-event', { name: 'nodeAdded', event: { node: newNode } });
+      pendingChanges.value = true;
     };
 
     const onNodeClick = (event, node) => {
@@ -281,6 +285,7 @@ export default {
         
         addEdges([newEdge]);
         emit('trigger-event', { name: 'connectionCreated', event: { connection: newEdge } });
+        pendingChanges.value = true;
       }
     };
 
@@ -293,6 +298,7 @@ export default {
       const updatedNode = findNode(node.id);
       if (updatedNode) {
         emit('trigger-event', { name: 'nodeMoved', event: { node: updatedNode } });
+        pendingChanges.value = true;
       }
     };
 
@@ -300,12 +306,14 @@ export default {
       nodes.forEach(node => {
         emit('trigger-event', { name: 'nodeDeleted', event: { nodeId: node.id } });
       });
+      pendingChanges.value = true;
     };
 
     const onEdgesDelete = (edges) => {
       edges.forEach(edge => {
         emit('trigger-event', { name: 'edgeDeleted', event: { edgeId: edge.id } });
       });
+      pendingChanges.value = true;
     };
 
     const onNodeDataUpdate = (nodeId, newData) => {
@@ -313,14 +321,19 @@ export default {
       if (node) {
         node.data = { ...node.data, ...newData };
         emit('trigger-event', { name: 'nodeUpdated', event: { node } });
-        // Forzar la actualización del flowData
-        updateFlowData();
+        pendingChanges.value = true;
       }
     };
 
-    const handleSaveChanges = () => {
-      updateFlowData();
-      emit('trigger-event', { name: 'flowSaved', event: { flowData: elements.value } });
+    const handleSaveChanges = async () => {
+      try {
+        updateFlowData();
+        emit('trigger-event', { name: 'flowSaved', event: { flowData: elements.value } });
+        return Promise.resolve();
+      } catch (error) {
+        console.error('Error saving flow:', error);
+        return Promise.reject(error);
+      }
     };
 
     return {
