@@ -15,13 +15,24 @@
         </div>
       </div>
     </div>
+
+    <!-- Botón de Save -->
+    <div class="save-section">
+      <button class="save-button" @click="saveChanges">
+        <svg viewBox="0 0 24 24" class="save-icon">
+          <path d="M17 3H5C3.89 3 3 3.9 3 5V19C3 20.1 3.89 21 5 21H19C20.1 21 21 20.1 21 19V7L17 3ZM19 19H5V5H16.17L19 7.83V19ZM12 12C10.34 12 9 13.34 9 15C9 16.66 10.34 18 12 18C13.66 18 15 16.66 15 15C15 13.34 13.66 12 12 12ZM6 6H15V10H6V6Z" />
+        </svg>
+        Guardar Cambios
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Sidebar',
-  setup() {
+  emits: ['save-changes'],
+  setup(props, { emit }) {
     const onDragStart = (event, nodeType) => {
       const nodeData = {
         type: nodeType,
@@ -37,8 +48,13 @@ export default {
       event.dataTransfer.effectAllowed = 'move';
     };
 
+    const saveChanges = () => {
+      emit('save-changes');
+    };
+
     return {
-      onDragStart
+      onDragStart,
+      saveChanges
     };
   }
 };
@@ -52,6 +68,8 @@ export default {
   padding: 20px;
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-title {
@@ -65,6 +83,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex-grow: 1;
 }
 
 .draggable-node {
@@ -108,5 +127,38 @@ export default {
   font-size: 14px;
   color: #262627;
   font-weight: 500;
+}
+
+.save-section {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eaeaea;
+}
+
+.save-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: #0445AF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #033584;
+  }
+
+  .save-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
 }
 </style>
