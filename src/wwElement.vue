@@ -29,7 +29,7 @@
         <Controls />
         <MiniMap v-if="showMinimap" />
       </VueFlow>
-      <Sidebar class="flowchart-sidebar" />
+      <Sidebar class="flowchart-sidebar" @save-changes="handleSaveChanges" />
     </div>
   </div>
 </template>
@@ -318,6 +318,11 @@ export default {
       }
     };
 
+    const handleSaveChanges = () => {
+      updateFlowData();
+      emit('trigger-event', { name: 'flowSaved', event: { flowData: elements.value } });
+    };
+
     return {
       elements,
       initialized,
@@ -338,6 +343,7 @@ export default {
       onNodesDelete,
       onEdgesDelete,
       onNodeDataUpdate,
+      handleSaveChanges,
     };
   },
 };
