@@ -70,5 +70,73 @@ export default {
       tooltip: 'Set the height of the flow chart container',
     },
     /* wwEditor:end */
+  },
+
+  nodes: {
+    label: { en: 'Initial Flow' },
+    type: 'Object',
+    section: 'settings',
+    defaultValue: {
+      nodes: [
+        {
+          id: 'input',
+          type: 'custom',
+          position: { x: 100, y: 100 },
+          data: {
+            label: 'Entrada',
+            content: 'Información de entrada',
+            number: '1',
+            backgroundColor: '#E3F2FD'
+          }
+        },
+        {
+          id: 'process',
+          type: 'custom',
+          position: { x: 400, y: 100 },
+          data: {
+            label: 'Proceso',
+            content: 'Procesamiento de información',
+            number: '2',
+            backgroundColor: '#F3E5F5'
+          }
+        },
+        {
+          id: 'output',
+          type: 'custom',
+          position: { x: 700, y: 100 },
+          data: {
+            label: 'Salida',
+            content: 'Información de salida',
+            number: '3',
+            backgroundColor: '#E8F5E9'
+          }
+        }
+      ],
+      edges: [
+        {
+          id: 'e1-2',
+          source: 'input',
+          target: 'process',
+          type: 'smoothstep',
+          animated: true
+        },
+        {
+          id: 'e2-3',
+          source: 'process',
+          target: 'output',
+          type: 'smoothstep',
+          animated: true
+        }
+      ]
+    },
+    /* wwEditor:start */
+    bindingValidation: {
+      type: 'object',
+      tooltip: 'The initial flow configuration with nodes and edges',
+    },
+    propertyHelp: {
+      tooltip: 'Define the default flow structure that will be loaded initially',
+    },
+    /* wwEditor:end */
   }
 };
