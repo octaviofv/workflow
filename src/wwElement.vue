@@ -162,6 +162,32 @@ export default {
       ]
     };
 
+    // Watch for changes in content.flowData
+    watch(() => props.content.flowData, (newFlowData) => {
+      if (!newFlowData) return;
+      
+      try {
+        const parsedData = typeof newFlowData === 'string' 
+          ? JSON.parse(newFlowData) 
+          : newFlowData;
+
+        // Only update if the data is different
+        const currentData = {
+          nodes: elements.value.filter(el => !el.source),
+          edges: elements.value.filter(el => el.source)
+        };
+
+        if (JSON.stringify(currentData) !== JSON.stringify(parsedData)) {
+          elements.value = [
+            ...(parsedData.nodes || []),
+            ...(parsedData.edges || [])
+          ];
+        }
+      } catch (error) {
+        console.error('Error parsing flow data:', error);
+      }
+    }, { deep: true });
+
     const updateFlowData = () => {
       const nodes = elements.value.filter(el => !el.source);
       const edges = elements.value.filter(el => el.source);
@@ -171,14 +197,19 @@ export default {
         edges
       };
 
-      const updatedContent = {
-        ...props.content,
-        flowData: JSON.stringify(flowData, null, 2)
-      };
-
-      emit('update:content', updatedContent);
+      const stringifiedData = JSON.stringify(flowData, null, 2);
+      
+      // Only emit if the data has actually changed
+      if (stringifiedData !== props.content.flowData) {
+        const updatedContent = {
+          ...props.content,
+          flowData: stringifiedData
+        };
+        emit('update:content', updatedContent);
+      }
     };
 
+    // Watch for changes in elements
     watch(elements, () => {
       updateFlowData();
     }, { deep: true });
@@ -282,6 +313,8 @@ export default {
       if (node) {
         node.data = { ...node.data, ...newData };
         emit('trigger-event', { name: 'nodeUpdated', event: { node } });
+        // Forzar la actualización del flowData
+        updateFlowData();
       }
     };
 
