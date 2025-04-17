@@ -85,58 +85,78 @@ export default {
       section: 'settings',
       bindable: true,
       defaultValue: JSON.stringify({
-        nodes: [
-          {
-            id: 'input',
-            type: 'custom',
-            position: { x: 100, y: 100 },
-            data: {
-              label: 'Entrada',
-              content: 'Información de entrada',
-              number: '1',
-              backgroundColor: '#E3F2FD'
-            }
+      "nodes": [
+        {
+          "id": "input",
+          "type": "custom",
+          "position": { "x": 60, "y": 20 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Entrada",
+            "content": "Información de entrada",
+            "number": "1",
+            "backgroundColor": "#E3F2FD"
           },
-          {
-            id: 'process',
-            type: 'custom',
-            position: { x: 400, y: 100 },
-            data: {
-              label: 'Proceso',
-              content: 'Procesamiento de información',
-              number: '2',
-              backgroundColor: '#F3E5F5'
-            }
-          },
-          {
-            id: 'output',
-            type: 'custom',
-            position: { x: 700, y: 100 },
-            data: {
-              label: 'Salida',
-              content: 'Información de salida',
-              number: '3',
-              backgroundColor: '#E8F5E9'
-            }
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
           }
-        ],
-        edges: [
-          {
-            id: 'e1-2',
-            source: 'input',
-            target: 'process',
-            type: 'smoothstep',
-            animated: true
+        },
+        {
+          "id": "process",
+          "type": "custom",
+          "position": { "x": 60, "y": 150 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Proceso",
+            "content": "Procesamiento de información",
+            "number": "2",
+            "backgroundColor": "#F3E5F5"
           },
-          {
-            id: 'e2-3',
-            source: 'process',
-            target: 'output',
-            type: 'smoothstep',
-            animated: true
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
           }
-        ]
-      }),
+        },
+        {
+          "id": "output",
+          "type": "custom",
+          "position": { "x": 60, "y": 280 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Salida",
+            "content": "Información de salida",
+            "number": "3",
+            "backgroundColor": "#E8F5E9"
+          },
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "input",
+          "sourceHandle": "bottom",
+          "target": "process",
+          "targetHandle": "top",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2-3",
+          "source": "process",
+          "sourceHandle": "bottom",
+          "target": "output",
+          "targetHandle": "top",
+          "type": "smoothstep",
+          "animated": true
+        }
+      ]
+    }
+    ),
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
