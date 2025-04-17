@@ -74,61 +74,10 @@ export default {
 
   nodes: {
     label: { en: 'Initial Flow' },
-    type: 'Object',           // Declara un objeto anidado :contentReference[oaicite:5]{index=5}
-    section: 'settings',      // Pestaña "Settings" :contentReference[oaicite:6]{index=6}
-    bindable: 'list',         // Permite binding de un array de objetos :contentReference[oaicite:7]{index=7}
-    options: {
-      item: {
-        nodes: {
-          label: { en: 'Nodes Array' },
-          type: 'Array',      // Cada elemento es un array :contentReference[oaicite:8]{index=8}
-          options: {
-            item: {
-              id: { label: { en: 'ID' }, type: 'Text' },
-              type: { label: { en: 'Type' }, type: 'Text' },
-              position: {
-                label: { en: 'Position' },
-                type: 'Object',
-                options: {
-                  item: {
-                    x: { label: { en: 'X' }, type: 'Number' },
-                    y: { label: { en: 'Y' }, type: 'Number' },
-                  },
-                },
-              },
-              data: {
-                label: { en: 'Data' },
-                type: 'Object',
-                options: {
-                  item: {
-                    label: { label: { en: 'Label' }, type: 'Text' },
-                    content: { label: { en: 'Content' }, type: 'Text' },
-                    number: { label: { en: 'Number' }, type: 'Text' },
-                    backgroundColor: { label: { en: 'BG Color' }, type: 'Color' },
-                  },
-                },
-              },
-            },
-            fixed: false,
-          },
-        },
-        edges: {
-          label: { en: 'Edges Array' },
-          type: 'Array',
-          options: {
-            item: {
-              id: { label: { en: 'ID' }, type: 'Text' },
-              source: { label: { en: 'Source' }, type: 'Text' },
-              target: { label: { en: 'Target' }, type: 'Text' },
-              type: { label: { en: 'Edge Type' }, type: 'Text' },
-              animated: { label: { en: 'Animated' }, type: 'OnOff' },
-            },
-            fixed: false,
-          },
-        },
-      },
-    },
-    defaultValue: {          // Carga tu flujo inicial :contentReference[oaicite:9]{index=9}
+    type: 'object', // Cambiado a minúscula
+    section: 'settings',
+    bindable: true, // Añadido bindable: true
+    defaultValue: {
       nodes: [
         {
           id: 'input',
@@ -138,10 +87,31 @@ export default {
             label: 'Entrada',
             content: 'Información de entrada',
             number: '1',
-            backgroundColor: '#E3F2FD',
-          },
+            backgroundColor: '#E3F2FD'
+          }
         },
-        // … tus otros nodos …
+        {
+          id: 'process',
+          type: 'custom',
+          position: { x: 400, y: 100 },
+          data: {
+            label: 'Proceso',
+            content: 'Procesamiento de información',
+            number: '2',
+            backgroundColor: '#F3E5F5'
+          }
+        },
+        {
+          id: 'output',
+          type: 'custom',
+          position: { x: 700, y: 100 },
+          data: {
+            label: 'Salida',
+            content: 'Información de salida',
+            number: '3',
+            backgroundColor: '#E8F5E9'
+          }
+        }
       ],
       edges: [
         {
@@ -149,10 +119,16 @@ export default {
           source: 'input',
           target: 'process',
           type: 'smoothstep',
-          animated: true,
+          animated: true
         },
-        // … tus otras aristas …
-      ],
+        {
+          id: 'e2-3',
+          source: 'process',
+          target: 'output',
+          type: 'smoothstep',
+          animated: true
+        }
+      ]
     },
     /* wwEditor:start */
     bindingValidation: {
@@ -163,5 +139,5 @@ export default {
       tooltip: 'Define the default flow structure that will be loaded initially',
     },
     /* wwEditor:end */
-  },
+  }
 };
