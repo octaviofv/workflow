@@ -24,12 +24,6 @@
         <template #node-custom="nodeProps">
           <CustomNode v-bind="nodeProps" @update:data="onNodeDataUpdate" />
         </template>
-        <template #node-circle="nodeProps">
-          <CircleNode v-bind="nodeProps" />
-        </template>
-        <template #node-http-request="nodeProps">
-          <HttpRequestNode v-bind="nodeProps" @update:data="onNodeDataUpdate" />
-        </template>
 
         <Background :pattern-color="backgroundColor" :gap="backgroundGap" />
         <Controls />
@@ -55,8 +49,6 @@ import '@vue-flow/core/dist/theme-default.css';
 import '@vue-flow/controls/dist/style.css';
 import '@vue-flow/minimap/dist/style.css';
 import CustomNode from './components/CustomNode.vue';
-import CircleNode from './components/CircleNode.vue';
-import HttpRequestNode from './components/HttpRequestNode.vue';
 import Sidebar from './components/Sidebar.vue';
 
 export default {
@@ -68,8 +60,6 @@ export default {
     MiniMap,
     Panel,
     CustomNode,
-    CircleNode,
-    HttpRequestNode,
     Sidebar,
   },
   props: {
@@ -117,10 +107,64 @@ export default {
     const showMinimap = computed(() => props.content?.showMinimap ?? true);
     const backgroundColor = computed(() => props.content?.backgroundColor || '#f5f5f5');
 
-    // Update flowData in content whenever elements change
+    // Default flow structure
+    const defaultFlow = {
+      nodes: [
+        {
+          id: 'input',
+          type: 'custom',
+          position: { x: 100, y: 100 },
+          data: {
+            label: 'Entrada',
+            content: 'Información de entrada',
+            number: '1',
+            backgroundColor: '#E3F2FD'
+          }
+        },
+        {
+          id: 'process',
+          type: 'custom',
+          position: { x: 400, y: 100 },
+          data: {
+            label: 'Proceso',
+            content: 'Procesamiento de información',
+            number: '2',
+            backgroundColor: '#F3E5F5'
+          }
+        },
+        {
+          id: 'output',
+          type: 'custom',
+          position: { x: 700, y: 100 },
+          data: {
+            label: 'Salida',
+            content: 'Información de salida',
+            number: '3',
+            backgroundColor: '#E8F5E9'
+          }
+        }
+      ],
+      edges: [
+        {
+          id: 'e1-2',
+          source: 'input',
+          target: 'process',
+          type: 'smoothstep',
+          animated: true
+        },
+        {
+          id: 'e2-3',
+          source: 'process',
+          target: 'output',
+          type: 'smoothstep',
+          animated: true
+        }
+      ]
+    };
+
     const updateFlowData = () => {
-      const nodes = elements.value.filter(el => !el.source); // Elements without source are nodes
-      const edges = elements.value.filter(el => el.source); // Elements with source are edges
+      const nodes = elements.value.filter(el => !el.source);
+      const edges = elements.value.filter(el => el.source);
 
       const flowData = {
         nodes,
@@ -129,13 +173,12 @@ export default {
 
       const updatedContent = {
         ...props.content,
-        flowData: JSON.stringify(flowData, null, 2) // Format the JSON with indentation
+        flowData: JSON.stringify(flowData, null, 2)
       };
 
       emit('update:content', updatedContent);
     };
 
-    // Watch for changes in elements and update flowData
     watch(elements, () => {
       updateFlowData();
     }, { deep: true });
@@ -151,11 +194,21 @@ export default {
             ...(parsedData.nodes || []),
             ...(parsedData.edges || [])
           ];
+        } else {
+          // Load default flow if no existing flow data
+          elements.value = [
+            ...defaultFlow.nodes,
+            ...defaultFlow.edges
+          ];
         }
         initialized.value = true;
       } catch (error) {
         console.error('Error initializing flow data:', error);
-        elements.value = [];
+        // Load default flow on error
+        elements.value = [
+          ...defaultFlow.nodes,
+          ...defaultFlow.edges
+        ];
         initialized.value = true;
       }
     });
@@ -232,22 +285,6 @@ export default {
       }
     };
 
-    const deleteSelected = () => {
-      if (selectedNode.value) {
-        removeNodes([selectedNode.value.id]);
-        selectedNode.value = null;
-        emit('trigger-event', { name: 'nodeDeleted' });
-      }
-    };
-
-    const updateNodeData = (nodeId, data) => {
-      const node = findNode(nodeId);
-      if (node) {
-        node.data = { ...node.data, ...data };
-        emit('trigger-event', { name: 'nodeUpdated', event: { node } });
-      }
-    };
-
     return {
       elements,
       initialized,
@@ -262,8 +299,6 @@ export default {
       onNodeClick,
       onConnect,
       onPaneClick,
-      deleteSelected,
-      updateNodeData,
       onDragOver,
       onDrop,
       onNodeDragStop,
