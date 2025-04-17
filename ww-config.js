@@ -1,142 +1,139 @@
 export default {
-  backgroundColor: {
-    label: { en: 'Background Color' },
-    type: 'Color',
-    section: 'style',
-    bindable: true,
-    defaultValue: '#ffffff',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'Set the background color of the flow chart',
+  editor: {
+    label: {
+      en: 'Flow Chart Builder',
     },
-    propertyHelp: {
-      tooltip: 'Define the background color of the flow chart container',
-    },
-    /* wwEditor:end */
+    icon: 'workflow',
   },
-
-  backgroundGap: {
-    label: { en: 'Background Grid Gap' },
-    type: 'Number',
-    section: 'style',
-    bindable: true,
-    defaultValue: 20,
-    options: {
-      min: 10,
-      max: 100,
-      step: 5,
-    },
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'number',
-      tooltip: 'The gap between background grid lines (in pixels)',
-    },
-    propertyHelp: {
-      tooltip: 'Set the spacing between background grid lines',
-    },
-    /* wwEditor:end */
-  },
-
-  width: {
-    label: { en: 'Width' },
-    type: 'Length',
-    section: 'settings',
-    bindable: true,
-    defaultValue: '100%',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'The width of the flow chart container (e.g., "100%", "500px")',
-    },
-    propertyHelp: {
-      tooltip: 'Set the width of the flow chart container',
-    },
-    /* wwEditor:end */
-  },
-
-  height: {
-    label: { en: 'Height' },
-    type: 'Length',
-    section: 'settings',
-    bindable: true,
-    defaultValue: '500px',
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'string',
-      tooltip: 'The height of the flow chart container (e.g., "500px", "80vh")',
-    },
-    propertyHelp: {
-      tooltip: 'Set the height of the flow chart container',
-    },
-    /* wwEditor:end */
-  },
-
-  nodes: {
-    label: { en: 'Initial Flow' },
-    type: 'Object',
-    section: 'settings',
-    defaultValue: {
-      nodes: [
+  properties: {
+    nodes: {
+      label: { en: 'Nodes' },
+      type: 'Array',
+      section: 'settings',
+      bindable: true,
+      defaultValue: [
         {
-          id: 'input',
           type: 'custom',
-          position: { x: 100, y: 100 },
-          data: {
-            label: 'Entrada',
-            content: 'Información de entrada',
-            number: '1',
-            backgroundColor: '#E3F2FD'
-          }
+          label: 'Entrada',
+          description: 'Información de entrada',
+          backgroundColor: '#E3F2FD',
+          borderColor: '#1E88E5',
+          textColor: '#000000'
         },
         {
-          id: 'process',
           type: 'custom',
-          position: { x: 400, y: 100 },
-          data: {
-            label: 'Proceso',
-            content: 'Procesamiento de información',
-            number: '2',
-            backgroundColor: '#F3E5F5'
-          }
+          label: 'Proceso',
+          description: 'Procesamiento de información',
+          backgroundColor: '#F3E5F5',
+          borderColor: '#9C27B0',
+          textColor: '#000000'
         },
         {
-          id: 'output',
           type: 'custom',
-          position: { x: 700, y: 100 },
-          data: {
-            label: 'Salida',
-            content: 'Información de salida',
-            number: '3',
-            backgroundColor: '#E8F5E9'
-          }
+          label: 'Salida',
+          description: 'Información de salida',
+          backgroundColor: '#E8F5E9',
+          borderColor: '#43A047',
+          textColor: '#000000'
         }
       ],
-      edges: [
-        {
-          id: 'e1-2',
-          source: 'input',
-          target: 'process',
-          type: 'smoothstep',
-          animated: true
+      options: {
+        expandable: true,
+        getItemLabel(item, index) {
+          return item?.label || `Node ${index + 1}`;
         },
-        {
-          id: 'e2-3',
-          source: 'process',
-          target: 'output',
-          type: 'smoothstep',
-          animated: true
+        item: {
+          type: 'Object',
+          options: {
+            item: {
+              type: {
+                label: { en: 'Type' },
+                type: 'TextSelect',
+                options: {
+                  options: [
+                    { value: 'custom', label: 'Custom Node' }
+                  ]
+                }
+              },
+              label: {
+                label: { en: 'Label' },
+                type: 'Text',
+              },
+              description: {
+                label: { en: 'Description' },
+                type: 'Text',
+              },
+              backgroundColor: {
+                label: { en: 'Background Color' },
+                type: 'Color',
+              },
+              borderColor: {
+                label: { en: 'Border Color' },
+                type: 'Color',
+              },
+              textColor: {
+                label: { en: 'Text Color' },
+                type: 'Color',
+              }
+            }
+          }
         }
-      ]
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'array',
+        tooltip: 'Bind an array of node objects with properties: type, label, description, backgroundColor, borderColor, textColor',
+      },
+      propertyHelp: {
+        tooltip: 'Define the nodes to display in the flow diagram',
+      },
+      /* wwEditor:end */
     },
-    /* wwEditor:start */
-    bindingValidation: {
-      type: 'object',
-      tooltip: 'The initial flow configuration with nodes and edges',
-    },
-    propertyHelp: {
-      tooltip: 'Define the default flow structure that will be loaded initially',
-    },
-    /* wwEditor:end */
+    connections: {
+      label: { en: 'Connections' },
+      type: 'Array',
+      section: 'settings',
+      bindable: true,
+      defaultValue: [
+        { from: 0, to: 1, color: '#666666' },
+        { from: 1, to: 2, color: '#666666' }
+      ],
+      options: {
+        expandable: true,
+        getItemLabel(item, index) {
+          return `Connection ${index + 1}`;
+        },
+        item: {
+          type: 'Object',
+          options: {
+            item: {
+              from: {
+                label: { en: 'From Node Index' },
+                type: 'Number',
+                options: { min: 0 }
+              },
+              to: {
+                label: { en: 'To Node Index' },
+                type: 'Number',
+                options: { min: 0 }
+              },
+              color: {
+                label: { en: 'Line Color' },
+                type: 'Color',
+              }
+            }
+          }
+        }
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'array',
+        tooltip: 'Bind an array of connection objects with properties: from (number), to (number), color',
+      },
+      propertyHelp: {
+        tooltip: 'Define the connections between nodes using node indices',
+      },
+      /* wwEditor:end */
+    }
   }
 };
