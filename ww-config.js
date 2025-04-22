@@ -282,6 +282,11 @@ export default {
       label: { en: 'On Selection Cleared' },
       event: {},
     },
+    {
+      name: 'flowSaved',
+      label: { en: 'On Flow Saved' },
+      event: { flowData: null },
+    }
   ],
   actions: [
     {
