@@ -29,7 +29,7 @@
         <div class="preview-node">
           <div class="preview-number">N</div>
           <div class="preview-content">
-            <span>Nuevo Nodo</span>
+            <span>Nuevo Proceso</span>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@ export default {
       const nodeData = {
         type: nodeType,
         data: {
-          label: 'Nuevo Nodo',
+          label: 'Nuevo Proceso',
           content: '',
           number: 'N',
           backgroundColor: '#ffffff',
