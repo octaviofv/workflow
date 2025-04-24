@@ -136,7 +136,7 @@ export default {
   top: 0;
   background: #ffffff;
   padding-bottom: 16px;
-  z-index: 1000;
+  z-index: 0;
 }
 
 .divider {
@@ -218,7 +218,7 @@ export default {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  z-index: 1001;
+  z-index: 0;
 
   &:hover:not(.saving) {
     background: #033584;
@@ -245,7 +245,7 @@ export default {
   text-align: center;
   animation: fadeIn 0.3s ease;
   position: relative;
-  z-index: 1001;
+  z-index: 0;
 
   &.success {
     background: #E8F5E9;
