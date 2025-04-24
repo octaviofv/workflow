@@ -108,6 +108,7 @@ export default {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  position: relative;
 
   /* Custom scrollbar styles */
   &::-webkit-scrollbar {
@@ -135,7 +136,7 @@ export default {
   top: 0;
   background: #ffffff;
   padding-bottom: 16px;
-  z-index: 10;
+  z-index: 1000;
 }
 
 .divider {
@@ -216,6 +217,8 @@ export default {
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 1001;
 
   &:hover:not(.saving) {
     background: #033584;
@@ -241,6 +244,8 @@ export default {
   font-size: 13px;
   text-align: center;
   animation: fadeIn 0.3s ease;
+  position: relative;
+  z-index: 1001;
 
   &.success {
     background: #E8F5E9;
