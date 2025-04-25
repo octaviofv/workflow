@@ -108,7 +108,6 @@ export default {
     const showMinimap = computed(() => props.content?.showMinimap ?? true);
     const backgroundColor = computed(() => props.content?.backgroundColor || '#f5f5f5');
 
-    // Default flow structure
     const defaultFlow = {
       nodes: [
         {
@@ -346,12 +345,12 @@ export default {
 
 <style lang="scss" scoped>
 .flowchart-container {
-  width: calc(100% - 250px);
+  width: 100%;
   position: relative;
   border: 1px solid #E9E9E8;
   border-radius: 4px;
   overflow: hidden;
-  margin-left: 250px;
+  box-sizing: border-box;
 }
 
 .flowchart-wrapper {
@@ -367,6 +366,8 @@ export default {
 .flowchart {
   flex-grow: 1;
   height: 100%;
+  margin-left: 250px;
+  width: calc(100% - 250px);
 
   :deep(.vue-flow__node) {
     width: auto;
@@ -410,5 +411,9 @@ export default {
 .flowchart-sidebar {
   flex-shrink: 0;
   height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
 }
 </style>
