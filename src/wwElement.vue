@@ -80,7 +80,6 @@ export default {
     const initialized = ref(false);
     const elements = ref([]);
     const selectedNode = ref(null);
-    const pendingChanges = ref(false);
 
     const isEditing = computed(() => {
       /* wwEditor:start */
@@ -108,6 +107,7 @@ export default {
     const showMinimap = computed(() => props.content?.showMinimap ?? true);
     const backgroundColor = computed(() => props.content?.backgroundColor || '#f5f5f5');
 
+    // Default flow structure
     const defaultFlow = {
       nodes: [
         {
@@ -118,7 +118,7 @@ export default {
             label: 'Entrada',
             content: 'Información de entrada',
             number: '1',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#E3F2FD'
           }
         },
         {
@@ -129,7 +129,7 @@ export default {
             label: 'Proceso',
             content: 'Procesamiento de información',
             number: '2',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#F3E5F5'
           }
         },
         {
@@ -140,7 +140,7 @@ export default {
             label: 'Salida',
             content: 'Información de salida',
             number: '3',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#E8F5E9'
           }
         }
       ],
@@ -162,6 +162,7 @@ export default {
       ]
     };
 
+    // Watch for changes in content.flowData
     watch(() => props.content.flowData, (newFlowData) => {
       if (!newFlowData) return;
       
@@ -170,6 +171,7 @@ export default {
           ? JSON.parse(newFlowData) 
           : newFlowData;
 
+        // Only update if the data is different
         const currentData = {
           nodes: elements.value.filter(el => !el.source),
           edges: elements.value.filter(el => el.source)
@@ -180,14 +182,14 @@ export default {
             ...(parsedData.nodes || []),
             ...(parsedData.edges || [])
           ];
-          pendingChanges.value = false;
         }
       } catch (error) {
         console.error('Error parsing flow data:', error);
       }
     }, { deep: true });
 
-    const updateFlowData = () => {
+    // Watch for changes in elements
+    watch(elements, () => {
       const nodes = elements.value.filter(el => !el.source);
       const edges = elements.value.filter(el => el.source);
 
@@ -204,12 +206,7 @@ export default {
           flowData: stringifiedData
         };
         emit('update:content', updatedContent);
-        pendingChanges.value = false;
       }
-    };
-
-    watch(elements, () => {
-      pendingChanges.value = true;
     }, { deep: true });
 
     onMounted(() => {
@@ -259,7 +256,6 @@ export default {
 
       addNodes([newNode]);
       emit('trigger-event', { name: 'nodeAdded', event: { node: newNode } });
-      pendingChanges.value = true;
     };
 
     const onNodeClick = (event, node) => {
@@ -278,7 +274,6 @@ export default {
         
         addEdges([newEdge]);
         emit('trigger-event', { name: 'connectionCreated', event: { connection: newEdge } });
-        pendingChanges.value = true;
       }
     };
 
@@ -291,7 +286,6 @@ export default {
       const updatedNode = findNode(node.id);
       if (updatedNode) {
         emit('trigger-event', { name: 'nodeMoved', event: { node: updatedNode } });
-        pendingChanges.value = true;
       }
     };
 
@@ -299,14 +293,12 @@ export default {
       nodes.forEach(node => {
         emit('trigger-event', { name: 'nodeDeleted', event: { nodeId: node.id } });
       });
-      pendingChanges.value = true;
     };
 
     const onEdgesDelete = (edges) => {
       edges.forEach(edge => {
         emit('trigger-event', { name: 'edgeDeleted', event: { edgeId: edge.id } });
       });
-      pendingChanges.value = true;
     };
 
     const onNodeDataUpdate = (nodeId, newData) => {
@@ -314,7 +306,6 @@ export default {
       if (node) {
         node.data = { ...node.data, ...newData };
         emit('trigger-event', { name: 'nodeUpdated', event: { node } });
-        pendingChanges.value = true;
       }
     };
 
@@ -350,7 +341,8 @@ export default {
   border: 1px solid #E9E9E8;
   border-radius: 4px;
   overflow: hidden;
-  box-sizing: border-box;
+  margin-left: 64px;
+  transition: margin-left 0.3s ease;
 }
 
 .flowchart-wrapper {
@@ -366,8 +358,6 @@ export default {
 .flowchart {
   flex-grow: 1;
   height: 100%;
-  margin-left: 250px;
-  width: calc(100% - 250px);
 
   :deep(.vue-flow__node) {
     width: auto;
@@ -411,9 +401,5 @@ export default {
 .flowchart-sidebar {
   flex-shrink: 0;
   height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 10;
 }
 </style>
