@@ -69,7 +69,7 @@ export default {
   left: 0;
   top: 0;
   display: flex;
-  z-index: 0;
+  z-index: 1;
   transition: all 0.3s ease;
   width: 250px;
 
@@ -118,7 +118,7 @@ export default {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 0;
+  z-index: 1;
   transition: all 0.2s ease;
   color: #37352F;
   font-size: 12px;
