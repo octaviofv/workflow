@@ -55,9 +55,6 @@ export default {
   border-right: 1px solid #E9E9E8;
   padding: 24px 16px;
   height: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
   display: flex;
   flex-direction: column;
   z-index: 10;
