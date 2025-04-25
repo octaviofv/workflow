@@ -145,67 +145,68 @@ export default {
 <style lang="scss" scoped>
 .custom-node {
   min-width: 280px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border: 1px solid #E5E7EB;
+  background: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(55, 53, 47, 0.1);
+  border: 1px solid #E9E9E8;
   overflow: hidden;
   transition: all 0.2s ease;
 
   &.selected {
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    border-color: #37352F;
+    box-shadow: 0 0 0 1px #37352F;
   }
 }
 
 .node-header {
   display: flex;
   align-items: center;
-  padding: 12px 16px;
-  background: #F9FAFB;
-  border-bottom: 1px solid #E5E7EB;
+  padding: 12px;
+  background: #F7F6F3;
+  border-bottom: 1px solid #E9E9E8;
   gap: 12px;
 }
 
 .node-icon {
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #3B82F6;
-  border-radius: 8px;
+  background: #37352F;
+  border-radius: 4px;
   flex-shrink: 0;
 }
 
 .node-number {
-  color: white;
-  font-weight: 600;
-  font-size: 14px;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 .node-title {
-  font-weight: 500;
-  color: #111827;
+  font-weight: 400;
+  color: #37352F;
   font-size: 14px;
   flex-grow: 1;
 }
 
 .node-type {
   font-size: 12px;
-  color: #6B7280;
-  padding: 4px 8px;
-  background: #F3F4F6;
-  border-radius: 4px;
+  color: #787774;
+  padding: 2px 6px;
+  background: #F7F6F3;
+  border-radius: 3px;
+  border: 1px solid #E9E9E8;
 }
 
 .node-content {
-  padding: 12px 16px;
+  padding: 12px;
 }
 
 .content-text {
   font-size: 14px;
-  color: #4B5563;
+  color: #37352F;
   line-height: 1.5;
   white-space: pre-wrap;
 }
@@ -213,17 +214,16 @@ export default {
 .edit-input {
   flex-grow: 1;
   padding: 6px 8px;
-  border: 1px solid #D1D5DB;
-  border-radius: 6px;
+  border: 1px solid #E9E9E8;
+  border-radius: 4px;
   font-size: 14px;
-  color: #111827;
-  background: white;
+  color: #37352F;
+  background: #FFFFFF;
   margin-right: 8px;
 
   &:focus {
     outline: none;
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    border-color: #37352F;
   }
 }
 
@@ -231,51 +231,50 @@ export default {
   width: 100%;
   min-height: 80px;
   padding: 8px;
-  border: 1px solid #D1D5DB;
-  border-radius: 6px;
+  border: 1px solid #E9E9E8;
+  border-radius: 4px;
   font-size: 14px;
-  color: #111827;
+  color: #37352F;
   resize: vertical;
-  background: white;
+  background: #FFFFFF;
 
   &:focus {
     outline: none;
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+    border-color: #37352F;
   }
 }
 
 .edit-actions {
   display: flex;
   gap: 8px;
-  padding: 8px 16px 16px;
+  padding: 8px 12px 12px;
   justify-content: flex-end;
 
   button {
     padding: 6px 12px;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &.save-button {
-      background: #3B82F6;
-      color: white;
+      background: #37352F;
+      color: #FFFFFF;
       border: none;
 
       &:hover {
-        background: #2563EB;
+        background: #2B2B2B;
       }
     }
 
     &.cancel-button {
-      background: white;
-      color: #4B5563;
-      border: 1px solid #D1D5DB;
+      background: #F7F6F3;
+      color: #37352F;
+      border: 1px solid #E9E9E8;
 
       &:hover {
-        background: #F3F4F6;
+        background: #E9E9E8;
       }
     }
   }
@@ -290,31 +289,31 @@ export default {
   pointer-events: none;
 
   :deep(.vue-flow__handle) {
-    width: 12px;
-    height: 12px;
-    background: white;
-    border: 2px solid #3B82F6;
+    width: 6px;
+    height: 6px;
+    background: #FFFFFF;
+    border: 1px solid #37352F;
     border-radius: 50%;
     pointer-events: all;
     transition: all 0.2s ease;
 
     &:hover {
-      background: #DBEAFE;
+      background: #F7F6F3;
       transform: scale(1.2);
     }
 
     &.vue-flow__handle-connecting {
-      background: #3B82F6;
+      background: #37352F;
     }
 
     &.vue-flow__handle-valid {
-      background: #10B981;
-      border-color: #059669;
+      background: #37352F;
+      border-color: #37352F;
     }
 
     &.vue-flow__handle-invalid {
-      background: #EF4444;
-      border-color: #DC2626;
+      background: #E9E9E8;
+      border-color: #787774;
     }
   }
 }
