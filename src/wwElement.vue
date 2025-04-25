@@ -422,7 +422,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 1;
+  z-index: 0;
 }
 
 .zoom-button {
