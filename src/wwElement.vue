@@ -1,6 +1,7 @@
 <template>
   <div class="flowchart-container" :style="containerStyle">
     <div class="flowchart-wrapper">
+      <Sidebar class="flowchart-sidebar" />
       <VueFlow
         v-if="initialized"
         v-model="elements"
@@ -29,7 +30,6 @@
         <Controls />
         <MiniMap v-if="showMinimap" />
       </VueFlow>
-      <Sidebar class="flowchart-sidebar" @save-changes="handleSaveChanges" />
     </div>
   </div>
 </template>
@@ -366,9 +366,10 @@ export default {
 .flowchart-container {
   width: 100%;
   position: relative;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #E9E9E8;
+  border-radius: 4px;
   overflow: hidden;
+  margin-left: 250px;
 }
 
 .flowchart-wrapper {
@@ -378,6 +379,7 @@ export default {
   right: 0;
   bottom: 0;
   display: flex;
+  background: #FFFFFF;
 }
 
 .flowchart {
@@ -390,21 +392,41 @@ export default {
   }
 
   :deep(.vue-flow__handle) {
-    width: 8px;
-    height: 8px;
-    background: #2196F3;
-    border: 2px solid white;
+    width: 6px;
+    height: 6px;
+    background: #37352F;
+    border: 2px solid #FFFFFF;
   }
 
   :deep(.vue-flow__edge-path) {
-    stroke: #2196F3;
-    stroke-width: 2;
+    stroke: #37352F;
+    stroke-width: 1;
+  }
+
+  :deep(.vue-flow__controls) {
+    border: 1px solid #E9E9E8;
+    box-shadow: none;
+    background: #FFFFFF;
+    
+    button {
+      background: #F7F6F3;
+      border: none;
+      color: #37352F;
+      
+      &:hover {
+        background: #E9E9E8;
+      }
+    }
+  }
+
+  :deep(.vue-flow__minimap) {
+    background-color: #F7F6F3;
+    border: 1px solid #E9E9E8;
   }
 }
 
 .flowchart-sidebar {
   flex-shrink: 0;
   height: 100%;
-  border-left: 1px solid #ddd;
 }
 </style>
