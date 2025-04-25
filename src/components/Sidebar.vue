@@ -1,16 +1,22 @@
 <template>
-  <div class="sidebar">
-    <h3 class="sidebar-title">Elementos</h3>
-    <div class="node-list">
-      <div
-        class="draggable-node"
-        draggable="true"
-        @dragstart="onDragStart($event, 'custom')"
-      >
-        <div class="preview-node">
-          <div class="preview-number">N</div>
-          <div class="preview-content">
-            <span>Nuevo Proceso</span>
+  <div class="sidebar" :class="{ collapsed }">
+    <button class="collapse-button" @click="toggleCollapse">
+      {{ collapsed ? '→' : '←' }}
+    </button>
+    
+    <div class="sidebar-content">
+      <h3 class="sidebar-title">{{ collapsed ? '' : 'Elementos' }}</h3>
+      <div class="node-list">
+        <div
+          class="draggable-node"
+          draggable="true"
+          @dragstart="onDragStart($event, 'custom')"
+        >
+          <div class="preview-node">
+            <div class="preview-number">N</div>
+            <div class="preview-content" v-if="!collapsed">
+              <span>Nuevo Proceso</span>
+            </div>
           </div>
         </div>
       </div>
@@ -24,6 +30,12 @@ import { ref } from 'vue';
 export default {
   name: 'Sidebar',
   setup() {
+    const collapsed = ref(false);
+
+    const toggleCollapse = () => {
+      collapsed.value = !collapsed.value;
+    };
+
     const onDragStart = (event, nodeType) => {
       const nodeData = {
         type: nodeType,
@@ -40,6 +52,8 @@ export default {
     };
 
     return {
+      collapsed,
+      toggleCollapse,
       onDragStart
     };
   }
@@ -48,20 +62,31 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
   background: #FFFFFF;
   border-right: 1px solid #E9E9E8;
-  padding: 24px 16px;
   height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
   display: flex;
-  flex-direction: column;
   z-index: 10;
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  transition: all 0.3s ease;
+  width: 250px;
 
+  &.collapsed {
+    width: 64px;
+
+    .sidebar-content {
+      opacity: 0.5;
+    }
+
+    .preview-node {
+      padding: 8px;
+      justify-content: center;
+    }
+  }
+
+  /* Custom scrollbar styles */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -80,24 +105,56 @@ export default {
   }
 }
 
+.collapse-button {
+  position: absolute;
+  right: -12px;
+  top: 20px;
+  width: 24px;
+  height: 24px;
+  background: #FFFFFF;
+  border: 1px solid #E9E9E8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 11;
+  transition: all 0.2s ease;
+  color: #37352F;
+  font-size: 12px;
+  padding: 0;
+
+  &:hover {
+    background: #F7F6F3;
+    border-color: #37352F;
+  }
+}
+
+.sidebar-content {
+  padding: 24px 16px;
+  width: 100%;
+  transition: opacity 0.2s ease;
+}
+
 .sidebar-title {
   font-size: 14px;
   font-weight: 500;
   color: #37352F;
   margin-bottom: 16px;
   padding: 0 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .node-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  width: 100%;
 }
 
 .draggable-node {
   cursor: grab;
-  width: 100%;
   
   &:active {
     cursor: grabbing;
@@ -113,8 +170,6 @@ export default {
   align-items: center;
   gap: 12px;
   transition: all 0.2s ease;
-  width: 100%;
-  box-sizing: border-box;
 
   &:hover {
     background: #FFFFFF;
@@ -125,7 +180,6 @@ export default {
 .preview-number {
   width: 24px;
   height: 24px;
-  min-width: 24px;
   background-color: #37352F;
   color: #FFFFFF;
   border-radius: 4px;
@@ -134,6 +188,7 @@ export default {
   justify-content: center;
   font-weight: 500;
   font-size: 12px;
+  flex-shrink: 0;
 }
 
 .preview-content {
