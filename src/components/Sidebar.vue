@@ -50,6 +50,7 @@ export default {
 .sidebar {
   width: 250px;
   min-width: 250px;
+  max-width: 250px;
   background: #FFFFFF;
   border-right: 1px solid #E9E9E8;
   padding: 24px 16px;
@@ -62,6 +63,7 @@ export default {
   z-index: 10;
   overflow-y: auto;
   overflow-x: hidden;
+  box-sizing: border-box;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -115,6 +117,7 @@ export default {
   gap: 12px;
   transition: all 0.2s ease;
   width: 100%;
+  box-sizing: border-box;
 
   &:hover {
     background: #FFFFFF;
