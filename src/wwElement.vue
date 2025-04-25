@@ -30,6 +30,11 @@
         <Controls />
         <MiniMap v-if="showMinimap" />
       </VueFlow>
+
+      <div class="zoom-controls">
+        <button class="zoom-button" @click="zoomIn" title="Acercar">+</button>
+        <button class="zoom-button" @click="zoomOut" title="Alejar">-</button>
+      </div>
     </div>
   </div>
 </template>
@@ -88,7 +93,7 @@ export default {
       return false;
     });
 
-    const { findNode, addNodes, addEdges, removeNodes, project } = useVueFlow({
+    const { findNode, addNodes, addEdges, removeNodes, project, zoomIn: vueFlowZoomIn, zoomOut: vueFlowZoomOut } = useVueFlow({
       defaultEdgeOptions: {
         type: 'smoothstep',
         animated: true,
@@ -108,6 +113,14 @@ export default {
     const backgroundGap = computed(() => props.content?.backgroundGap || 20);
     const showMinimap = computed(() => props.content?.showMinimap ?? true);
     const backgroundColor = computed(() => props.content?.backgroundColor || '#f5f5f5');
+
+    const zoomIn = () => {
+      vueFlowZoomIn();
+    };
+
+    const zoomOut = () => {
+      vueFlowZoomOut();
+    };
 
     // Default flow structure
     const defaultFlow = {
@@ -329,6 +342,8 @@ export default {
       onNodesDelete,
       onEdgesDelete,
       onNodeDataUpdate,
+      zoomIn,
+      zoomOut,
     };
   },
 };
@@ -398,5 +413,40 @@ export default {
 .flowchart-sidebar {
   flex-shrink: 0;
   height: 100%;
+}
+
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 5;
+}
+
+.zoom-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: #FFFFFF;
+  border: 1px solid #E9E9E8;
+  color: #37352F;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+
+  &:hover {
+    background: #F7F6F3;
+    border-color: #37352F;
+  }
+
+  &:active {
+    background: #E9E9E8;
+  }
 }
 </style>
