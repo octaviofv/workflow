@@ -119,7 +119,7 @@ export default {
             label: 'Entrada',
             content: 'Información de entrada',
             number: '1',
-            backgroundColor: '#E3F2FD'
+            backgroundColor: '#ffffff'
           }
         },
         {
@@ -130,7 +130,7 @@ export default {
             label: 'Proceso',
             content: 'Procesamiento de información',
             number: '2',
-            backgroundColor: '#F3E5F5'
+            backgroundColor: '#ffffff'
           }
         },
         {
@@ -141,7 +141,7 @@ export default {
             label: 'Salida',
             content: 'Información de salida',
             number: '3',
-            backgroundColor: '#E8F5E9'
+            backgroundColor: '#ffffff'
           }
         }
       ],
@@ -163,7 +163,6 @@ export default {
       ]
     };
 
-    // Watch for changes in content.flowData
     watch(() => props.content.flowData, (newFlowData) => {
       if (!newFlowData) return;
       
@@ -172,7 +171,6 @@ export default {
           ? JSON.parse(newFlowData) 
           : newFlowData;
 
-        // Only update if the data is different
         const currentData = {
           nodes: elements.value.filter(el => !el.source),
           edges: elements.value.filter(el => el.source)
@@ -201,7 +199,6 @@ export default {
 
       const stringifiedData = JSON.stringify(flowData, null, 2);
       
-      // Only emit if the data has actually changed
       if (stringifiedData !== props.content.flowData) {
         const updatedContent = {
           ...props.content,
@@ -212,7 +209,6 @@ export default {
       }
     };
 
-    // Watch for changes in elements
     watch(elements, () => {
       pendingChanges.value = true;
     }, { deep: true });
@@ -229,7 +225,6 @@ export default {
             ...(parsedData.edges || [])
           ];
         } else {
-          // Load default flow if no existing flow data
           elements.value = [
             ...defaultFlow.nodes,
             ...defaultFlow.edges
@@ -238,7 +233,6 @@ export default {
         initialized.value = true;
       } catch (error) {
         console.error('Error initializing flow data:', error);
-        // Load default flow on error
         elements.value = [
           ...defaultFlow.nodes,
           ...defaultFlow.edges
@@ -325,17 +319,6 @@ export default {
       }
     };
 
-    const handleSaveChanges = async () => {
-      try {
-        updateFlowData();
-        emit('trigger-event', { name: 'flowSaved', event: { flowData: elements.value } });
-        return Promise.resolve();
-      } catch (error) {
-        console.error('Error saving flow:', error);
-        return Promise.reject(error);
-      }
-    };
-
     return {
       elements,
       initialized,
@@ -356,7 +339,6 @@ export default {
       onNodesDelete,
       onEdgesDelete,
       onNodeDataUpdate,
-      handleSaveChanges,
     };
   },
 };
@@ -364,7 +346,7 @@ export default {
 
 <style lang="scss" scoped>
 .flowchart-container {
-  width: 100%;
+  width: calc(100% - 250px);
   position: relative;
   border: 1px solid #E9E9E8;
   border-radius: 4px;
