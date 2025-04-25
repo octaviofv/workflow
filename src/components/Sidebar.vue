@@ -49,6 +49,7 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
   width: 250px;
+  min-width: 250px;
   background: #FFFFFF;
   border-right: 1px solid #E9E9E8;
   padding: 24px 16px;
@@ -59,8 +60,9 @@ export default {
   display: flex;
   flex-direction: column;
   z-index: 10;
+  overflow-y: auto;
+  overflow-x: hidden;
 
-  /* Custom scrollbar styles */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -91,10 +93,12 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .draggable-node {
   cursor: grab;
+  width: 100%;
   
   &:active {
     cursor: grabbing;
@@ -110,6 +114,7 @@ export default {
   align-items: center;
   gap: 12px;
   transition: all 0.2s ease;
+  width: 100%;
 
   &:hover {
     background: #FFFFFF;
@@ -120,6 +125,7 @@ export default {
 .preview-number {
   width: 24px;
   height: 24px;
+  min-width: 24px;
   background-color: #37352F;
   color: #FFFFFF;
   border-radius: 4px;
@@ -134,5 +140,8 @@ export default {
   font-size: 14px;
   color: #37352F;
   font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
