@@ -65,7 +65,7 @@ export default {
   background: #FFFFFF;
   border-right: 1px solid #E9E9E8;
   height: 100%;
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   display: flex;
