@@ -98,6 +98,8 @@ export default {
     const containerStyle = computed(() => ({
       height: props.content?.height || '600px',
       backgroundColor: props.content?.backgroundColor || '#f5f5f5',
+      position: 'relative',
+      overflow: 'hidden'
     }));
 
     const defaultZoom = computed(() => props.content?.defaultZoom || 1);
@@ -171,7 +173,6 @@ export default {
           ? JSON.parse(newFlowData) 
           : newFlowData;
 
-        // Only update if the data is different
         const currentData = {
           nodes: elements.value.filter(el => !el.source),
           edges: elements.value.filter(el => el.source)
@@ -188,7 +189,6 @@ export default {
       }
     }, { deep: true });
 
-    // Watch for changes in elements
     watch(elements, () => {
       const nodes = elements.value.filter(el => !el.source);
       const edges = elements.value.filter(el => el.source);
@@ -337,20 +337,17 @@ export default {
 <style lang="scss" scoped>
 .flowchart-container {
   width: 100%;
-  position: relative;
   border: 1px solid #E9E9E8;
   border-radius: 4px;
   overflow: hidden;
-  margin-left: 64px;
-  transition: margin-left 0.3s ease;
+  padding-left: 64px;
+  transition: padding-left 0.3s ease;
 }
 
 .flowchart-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   background: #FFFFFF;
 }
