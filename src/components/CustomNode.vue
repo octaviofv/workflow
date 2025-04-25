@@ -202,6 +202,7 @@ export default {
 
 .node-content {
   padding: 12px;
+  background: #FFFFFF;
 }
 
 .content-text {
@@ -249,6 +250,7 @@ export default {
   gap: 8px;
   padding: 8px 12px 12px;
   justify-content: flex-end;
+  background: #FFFFFF;
 
   button {
     padding: 6px 12px;
