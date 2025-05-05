@@ -18,7 +18,7 @@
         ref="labelInput"
         placeholder="Enter title"
       />
-      <div class="node-type">{{ data.type || 'Custom' }}</div>
+      <div class="tool-name">{{ data.toolName || 'Sin herramienta' }}</div>
     </div>
     
     <div class="node-content">
@@ -191,7 +191,7 @@ export default {
   flex-grow: 1;
 }
 
-.node-type {
+.tool-name {
   font-size: 12px;
   color: #787774;
   padding: 2px 6px;
