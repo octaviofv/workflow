@@ -102,7 +102,7 @@ export default {
     const contentTextarea = ref(null);
 
     // Get tool options from ww-config.js
-    const toolOptions = computed(() => wwConfig.properties.toolName.options.items);
+    const toolOptions = computed(() => wwConfig.properties.toolName.defaultValue);
 
     const getToolLabel = (value) => {
       const tool = toolOptions.value.find(t => t.value === value);
