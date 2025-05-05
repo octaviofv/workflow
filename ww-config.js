@@ -79,24 +79,48 @@ export default {
       /* wwEditor:end */
     },
 
-    toolName: {
-      label: { en: 'Tool Name' },
-      type: 'Select',
+    toolOptions: {
+      label: { en: 'Tool Options' },
+      type: 'Array',
       section: 'settings',
       bindable: true,
       defaultValue: [
         { label: 'Sin herramienta', value: 'sin_herramienta' },
         { label: 'Hubspot', value: 'hubspot' },
-        { label: 'Gmail', value: 'gmail' },
-        { label: 'Outlook', value: 'outlook' }
+        { label: 'Gmail', value: 'gmail' }
       ],
+      item: {
+        type: 'Object',
+        properties: {
+          label: { type: 'Text', label: { en: 'Label' } },
+          value: { type: 'Text', label: { en: 'Value' } },
+        },
+      },
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'array',
+        tooltip: 'Define las opciones disponibles para seleccionar herramientas',
+      },
+      propertyHelp: {
+        tooltip: 'Agrega o edita las opciones del menú desplegable de herramientas',
+      },
+      /* wwEditor:end */
+    },
+
+    toolName: {
+      label: { en: 'Tool Name' },
+      type: 'Select',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 'sin_herramienta',
+      options: 'properties.toolOptions',
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
-        tooltip: 'The name of the tool used in this node',
+        tooltip: 'Selecciona una herramienta de la lista disponible',
       },
       propertyHelp: {
-        tooltip: 'Set the name of the tool used in this process step',
+        tooltip: 'Elige la herramienta utilizada en este paso del proceso',
       },
       /* wwEditor:end */
     },
