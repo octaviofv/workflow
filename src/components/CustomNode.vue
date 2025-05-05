@@ -103,6 +103,7 @@ export default {
         ...props.data,
         label: editedLabel.value,
         content: editedContent.value,
+        toolName: props.data.toolName // Preserve the toolName when saving
       };
       
       emit('update:data', props.id, updatedData);
