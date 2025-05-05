@@ -18,7 +18,18 @@
         ref="labelInput"
         placeholder="Enter title"
       />
-      <div class="tool-name">{{ data.toolName || 'Sin herramienta' }}</div>
+      <div class="tool-selector" v-if="isEditing">
+        <select 
+          v-model="editedToolName"
+          class="tool-select"
+          @change="updateToolName"
+        >
+          <option v-for="tool in toolOptions" :key="tool" :value="tool">
+            {{ tool }}
+          </option>
+        </select>
+      </div>
+      <div class="tool-name" v-else>{{ data.toolName || 'Sin herramienta' }}</div>
     </div>
     
     <div class="node-content">
@@ -85,12 +96,17 @@ export default {
     const isEditing = ref(false);
     const editedLabel = ref('');
     const editedContent = ref('');
+    const editedToolName = ref('');
     const labelInput = ref(null);
     const contentTextarea = ref(null);
+
+    // Default tool options if not defined in config
+    const toolOptions = ['Sin herramienta', 'Hubspot', 'Gmail'];
 
     const startEditing = () => {
       editedLabel.value = props.data.label || '';
       editedContent.value = props.data.content || '';
+      editedToolName.value = props.data.toolName || 'Sin herramienta';
       isEditing.value = true;
       
       setTimeout(() => {
@@ -98,12 +114,20 @@ export default {
       }, 0);
     };
 
+    const updateToolName = () => {
+      const updatedData = {
+        ...props.data,
+        toolName: editedToolName.value
+      };
+      emit('update:data', props.id, updatedData);
+    };
+
     const saveChanges = () => {
       const updatedData = {
         ...props.data,
         label: editedLabel.value,
         content: editedContent.value,
-        toolName: props.data.toolName // Preserve the toolName when saving
+        toolName: editedToolName.value
       };
       
       emit('update:data', props.id, updatedData);
@@ -133,11 +157,14 @@ export default {
       isEditing,
       editedLabel,
       editedContent,
+      editedToolName,
+      toolOptions,
       labelInput,
       contentTextarea,
       startEditing,
       saveChanges,
       cancelEdit,
+      updateToolName,
     };
   },
 };
@@ -199,6 +226,26 @@ export default {
   background: #F7F6F3;
   border-radius: 3px;
   border: 1px solid #E9E9E8;
+}
+
+.tool-selector {
+  min-width: 120px;
+}
+
+.tool-select {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #E9E9E8;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #37352F;
+  background: #FFFFFF;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #37352F;
+  }
 }
 
 .node-content {
