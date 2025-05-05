@@ -113,7 +113,7 @@ export default {
       section: 'settings',
       bindable: true,
       defaultValue: 'sin_herramienta',
-      options: 'properties.toolOptions',
+      options: (component) => component.properties.toolOptions || [],
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
