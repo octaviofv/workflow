@@ -106,7 +106,7 @@ export default {
       if (rootComponent && rootComponent.__vueParentComponent?.ctx?.content?.toolOptions) {
         return rootComponent.__vueParentComponent.ctx.content.toolOptions;
       }
-      return ['Sin herramienta', 'Hubspot', 'Gmail']; // Fallback options
+      return ['Sin herramienta', 'Hubspot', 'Gmail', 'Outlook']; // Fallback options
     });
 
     const startEditing = () => {
