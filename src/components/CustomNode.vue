@@ -63,7 +63,7 @@
 
 <script>
 import { Handle } from '@vue-flow/core';
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 
 export default {
   name: 'CustomNode',
@@ -100,8 +100,14 @@ export default {
     const labelInput = ref(null);
     const contentTextarea = ref(null);
 
-    // Default tool options if not defined in config
-    const toolOptions = ['Sin herramienta', 'Hubspot', 'Gmail'];
+    // Get toolOptions from the root component's content prop
+    const toolOptions = computed(() => {
+      const rootComponent = document.querySelector('ww-flow-chart');
+      if (rootComponent && rootComponent.__vueParentComponent?.ctx?.content?.toolOptions) {
+        return rootComponent.__vueParentComponent.ctx.content.toolOptions;
+      }
+      return ['Sin herramienta', 'Hubspot', 'Gmail']; // Fallback options
+    });
 
     const startEditing = () => {
       editedLabel.value = props.data.label || '';

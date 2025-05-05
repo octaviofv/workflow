@@ -79,6 +79,23 @@ export default {
       /* wwEditor:end */
     },
 
+    toolOptions: {
+      label: { en: 'Tool Options' },
+      type: 'Array',
+      section: 'settings',
+      bindable: true,
+      defaultValue: ['Sin herramienta', 'Hubspot', 'Gmail'],
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'array',
+        tooltip: 'Array of available tool options for nodes',
+      },
+      propertyHelp: {
+        tooltip: 'Define the list of available tools that can be selected for nodes',
+      },
+      /* wwEditor:end */
+    },
+
     toolName: {
       label: { en: 'Tool Name' },
       type: 'Text',
