@@ -79,6 +79,23 @@ export default {
       /* wwEditor:end */
     },
 
+    toolName: {
+      label: { en: 'Tool Name' },
+      type: 'Text',
+      section: 'settings',
+      bindable: true,
+      defaultValue: 'Sin herramienta',
+      /* wwEditor:start */
+      bindingValidation: {
+        type: 'string',
+        tooltip: 'The name of the tool used in this node',
+      },
+      propertyHelp: {
+        tooltip: 'Set the name of the tool used in this process step',
+      },
+      /* wwEditor:end */
+    },
+
     flowData: {
       label: { en: 'Flow Data' },
       type: 'Text',
@@ -95,7 +112,8 @@ export default {
             "label": "Entrada",
             "content": "Información de entrada",
             "number": "1",
-            "backgroundColor": "#E3F2FD"
+            "backgroundColor": "#E3F2FD",
+            "toolName": "Sin herramienta"
           },
           "handles": {
             "source": ["bottom"],
@@ -111,7 +129,8 @@ export default {
             "label": "Proceso",
             "content": "Procesamiento de información",
             "number": "2",
-            "backgroundColor": "#F3E5F5"
+            "backgroundColor": "#F3E5F5",
+            "toolName": "Sin herramienta"
           },
           "handles": {
             "source": ["bottom"],
@@ -127,7 +146,8 @@ export default {
             "label": "Salida",
             "content": "Información de salida",
             "number": "3",
-            "backgroundColor": "#E8F5E9"
+            "backgroundColor": "#E8F5E9",
+            "toolName": "Sin herramienta"
           },
           "handles": {
             "source": ["bottom"],
