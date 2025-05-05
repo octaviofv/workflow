@@ -79,48 +79,26 @@ export default {
       /* wwEditor:end */
     },
 
-    toolOptions: {
-      label: { en: 'Tool Options' },
-      type: 'Array',
-      section: 'settings',
-      bindable: true,
-      defaultValue: [
-        { label: 'Sin herramienta', value: 'sin_herramienta' },
-        { label: 'Hubspot', value: 'hubspot' },
-        { label: 'Gmail', value: 'gmail' }
-      ],
-      item: {
-        type: 'Object',
-        properties: {
-          label: { type: 'Text', label: { en: 'Label' } },
-          value: { type: 'Text', label: { en: 'Value' } },
-        },
-      },
-      /* wwEditor:start */
-      bindingValidation: {
-        type: 'array',
-        tooltip: 'Define las opciones disponibles para seleccionar herramientas',
-      },
-      propertyHelp: {
-        tooltip: 'Agrega o edita las opciones del menú desplegable de herramientas',
-      },
-      /* wwEditor:end */
-    },
-
     toolName: {
       label: { en: 'Tool Name' },
       type: 'Select',
       section: 'settings',
       bindable: true,
       defaultValue: 'sin_herramienta',
-      options: (component) => component.properties.toolOptions || [],
+      options: {
+        items: [
+          { label: 'Sin herramienta', value: 'sin_herramienta' },
+          { label: 'Hubspot', value: 'hubspot' },
+          { label: 'Gmail', value: 'gmail' }
+        ]
+      },
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
-        tooltip: 'Selecciona una herramienta de la lista disponible',
+        tooltip: 'The name of the tool used in this node',
       },
       propertyHelp: {
-        tooltip: 'Elige la herramienta utilizada en este paso del proceso',
+        tooltip: 'Set the name of the tool used in this process step',
       },
       /* wwEditor:end */
     },
@@ -131,80 +109,81 @@ export default {
       section: 'settings',
       bindable: true,
       defaultValue: JSON.stringify({
-        "nodes": [
-          {
-            "id": "input",
-            "type": "custom",
-            "position": { "x": 60, "y": 20 },
-            "size": { "width": 280, "height": 100 },
-            "data": {
-              "label": "Entrada",
-              "content": "Información de entrada",
-              "number": "1",
-              "backgroundColor": "#E3F2FD",
-              "toolName": "sin_herramienta"
-            },
-            "handles": {
-              "source": ["bottom"],
-              "target": ["top"]
-            }
+      "nodes": [
+        {
+          "id": "input",
+          "type": "custom",
+          "position": { "x": 60, "y": 20 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Entrada",
+            "content": "Información de entrada",
+            "number": "1",
+            "backgroundColor": "#E3F2FD",
+            "toolName": "sin_herramienta"
           },
-          {
-            "id": "process",
-            "type": "custom",
-            "position": { "x": 60, "y": 150 },
-            "size": { "width": 280, "height": 100 },
-            "data": {
-              "label": "Proceso",
-              "content": "Procesamiento de información",
-              "number": "2",
-              "backgroundColor": "#F3E5F5",
-              "toolName": "sin_herramienta"
-            },
-            "handles": {
-              "source": ["bottom"],
-              "target": ["top"]
-            }
-          },
-          {
-            "id": "output",
-            "type": "custom",
-            "position": { "x": 60, "y": 280 },
-            "size": { "width": 280, "height": 100 },
-            "data": {
-              "label": "Salida",
-              "content": "Información de salida",
-              "number": "3",
-              "backgroundColor": "#E8F5E9",
-              "toolName": "sin_herramienta"
-            },
-            "handles": {
-              "source": ["bottom"],
-              "target": ["top"]
-            }
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
           }
-        ],
-        "edges": [
-          {
-            "id": "e1-2",
-            "source": "input",
-            "sourceHandle": "bottom",
-            "target": "process",
-            "targetHandle": "top",
-            "type": "smoothstep",
-            "animated": true
+        },
+        {
+          "id": "process",
+          "type": "custom",
+          "position": { "x": 60, "y": 150 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Proceso",
+            "content": "Procesamiento de información",
+            "number": "2",
+            "backgroundColor": "#F3E5F5",
+            "toolName": "sin_herramienta"
           },
-          {
-            "id": "e2-3",
-            "source": "process",
-            "sourceHandle": "bottom",
-            "target": "output",
-            "targetHandle": "top",
-            "type": "smoothstep",
-            "animated": true
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
           }
-        ]
-      }),
+        },
+        {
+          "id": "output",
+          "type": "custom",
+          "position": { "x": 60, "y": 280 },
+          "size": { "width": 280, "height": 100 },
+          "data": {
+            "label": "Salida",
+            "content": "Información de salida",
+            "number": "3",
+            "backgroundColor": "#E8F5E9",
+            "toolName": "sin_herramienta"
+          },
+          "handles": {
+            "source": ["bottom"],
+            "target": ["top"]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1-2",
+          "source": "input",
+          "sourceHandle": "bottom",
+          "target": "process",
+          "targetHandle": "top",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2-3",
+          "source": "process",
+          "sourceHandle": "bottom",
+          "target": "output",
+          "targetHandle": "top",
+          "type": "smoothstep",
+          "animated": true
+        }
+      ]
+    }
+    ),
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
