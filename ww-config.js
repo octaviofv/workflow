@@ -84,14 +84,12 @@ export default {
       type: 'Select',
       section: 'settings',
       bindable: true,
-      defaultValue: 'sin_herramienta',
-      options: {
-        items: [
-          { label: 'Sin herramienta', value: 'sin_herramienta' },
-          { label: 'Hubspot', value: 'hubspot' },
-          { label: 'Gmail', value: 'gmail' }
-        ]
-      },
+      defaultValue: [
+        { label: 'Sin herramienta', value: 'sin_herramienta' },
+        { label: 'Hubspot', value: 'hubspot' },
+        { label: 'Gmail', value: 'gmail' },
+        { label: 'Outlook', value: 'outlook' }
+      ],
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
@@ -109,81 +107,80 @@ export default {
       section: 'settings',
       bindable: true,
       defaultValue: JSON.stringify({
-      "nodes": [
-        {
-          "id": "input",
-          "type": "custom",
-          "position": { "x": 60, "y": 20 },
-          "size": { "width": 280, "height": 100 },
-          "data": {
-            "label": "Entrada",
-            "content": "Información de entrada",
-            "number": "1",
-            "backgroundColor": "#E3F2FD",
-            "toolName": "sin_herramienta"
+        "nodes": [
+          {
+            "id": "input",
+            "type": "custom",
+            "position": { "x": 60, "y": 20 },
+            "size": { "width": 280, "height": 100 },
+            "data": {
+              "label": "Entrada",
+              "content": "Información de entrada",
+              "number": "1",
+              "backgroundColor": "#E3F2FD",
+              "toolName": "sin_herramienta"
+            },
+            "handles": {
+              "source": ["bottom"],
+              "target": ["top"]
+            }
           },
-          "handles": {
-            "source": ["bottom"],
-            "target": ["top"]
-          }
-        },
-        {
-          "id": "process",
-          "type": "custom",
-          "position": { "x": 60, "y": 150 },
-          "size": { "width": 280, "height": 100 },
-          "data": {
-            "label": "Proceso",
-            "content": "Procesamiento de información",
-            "number": "2",
-            "backgroundColor": "#F3E5F5",
-            "toolName": "sin_herramienta"
+          {
+            "id": "process",
+            "type": "custom",
+            "position": { "x": 60, "y": 150 },
+            "size": { "width": 280, "height": 100 },
+            "data": {
+              "label": "Proceso",
+              "content": "Procesamiento de información",
+              "number": "2",
+              "backgroundColor": "#F3E5F5",
+              "toolName": "sin_herramienta"
+            },
+            "handles": {
+              "source": ["bottom"],
+              "target": ["top"]
+            }
           },
-          "handles": {
-            "source": ["bottom"],
-            "target": ["top"]
+          {
+            "id": "output",
+            "type": "custom",
+            "position": { "x": 60, "y": 280 },
+            "size": { "width": 280, "height": 100 },
+            "data": {
+              "label": "Salida",
+              "content": "Información de salida",
+              "number": "3",
+              "backgroundColor": "#E8F5E9",
+              "toolName": "sin_herramienta"
+            },
+            "handles": {
+              "source": ["bottom"],
+              "target": ["top"]
+            }
           }
-        },
-        {
-          "id": "output",
-          "type": "custom",
-          "position": { "x": 60, "y": 280 },
-          "size": { "width": 280, "height": 100 },
-          "data": {
-            "label": "Salida",
-            "content": "Información de salida",
-            "number": "3",
-            "backgroundColor": "#E8F5E9",
-            "toolName": "sin_herramienta"
+        ],
+        "edges": [
+          {
+            "id": "e1-2",
+            "source": "input",
+            "sourceHandle": "bottom",
+            "target": "process",
+            "targetHandle": "top",
+            "type": "smoothstep",
+            "animated": true
           },
-          "handles": {
-            "source": ["bottom"],
-            "target": ["top"]
+          {
+            "id": "e2-3",
+            "source": "process",
+            "sourceHandle": "bottom",
+            "target": "output",
+            "targetHandle": "top",
+            "type": "smoothstep",
+            "animated": true
           }
-        }
-      ],
-      "edges": [
-        {
-          "id": "e1-2",
-          "source": "input",
-          "sourceHandle": "bottom",
-          "target": "process",
-          "targetHandle": "top",
-          "type": "smoothstep",
-          "animated": true
-        },
-        {
-          "id": "e2-3",
-          "source": "process",
-          "sourceHandle": "bottom",
-          "target": "output",
-          "targetHandle": "top",
-          "type": "smoothstep",
-          "animated": true
-        }
-      ]
-    }
-    ),
+        ]
+      }),
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
