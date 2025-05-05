@@ -24,12 +24,12 @@
           class="tool-select"
           @change="updateToolName"
         >
-          <option v-for="tool in toolOptions" :key="tool" :value="tool">
-            {{ tool }}
+          <option v-for="option in toolOptions" :key="option.value" :value="option.value">
+            {{ option.label }}
           </option>
         </select>
       </div>
-      <div class="tool-name" v-else>{{ data.toolName || 'Sin herramienta' }}</div>
+      <div class="tool-name" v-else>{{ getToolLabel(data.toolName) }}</div>
     </div>
     
     <div class="node-content">
@@ -63,7 +63,8 @@
 
 <script>
 import { Handle } from '@vue-flow/core';
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
+import wwConfig from '../../ww-config';
 
 export default {
   name: 'CustomNode',
@@ -100,13 +101,18 @@ export default {
     const labelInput = ref(null);
     const contentTextarea = ref(null);
 
-    // Default tool options if not defined in config
-    const toolOptions = ['Sin herramienta', 'Hubspot', 'Gmail'];
+    // Get tool options from ww-config.js
+    const toolOptions = computed(() => wwConfig.properties.toolName.options.items);
+
+    const getToolLabel = (value) => {
+      const tool = toolOptions.value.find(t => t.value === value);
+      return tool ? tool.label : toolOptions.value[0].label;
+    };
 
     const startEditing = () => {
       editedLabel.value = props.data.label || '';
       editedContent.value = props.data.content || '';
-      editedToolName.value = props.data.toolName || 'Sin herramienta';
+      editedToolName.value = props.data.toolName || toolOptions.value[0].value;
       isEditing.value = true;
       
       setTimeout(() => {
@@ -165,6 +171,7 @@ export default {
       saveChanges,
       cancelEdit,
       updateToolName,
+      getToolLabel,
     };
   },
 };
