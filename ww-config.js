@@ -81,10 +81,17 @@ export default {
 
     toolName: {
       label: { en: 'Tool Name' },
-      type: 'Text',
+      type: 'Select',
       section: 'settings',
       bindable: true,
-      defaultValue: 'Sin herramienta',
+      defaultValue: 'sin_herramienta',
+      options: {
+        items: [
+          { label: 'Sin herramienta', value: 'sin_herramienta' },
+          { label: 'Hubspot', value: 'hubspot' },
+          { label: 'Gmail', value: 'gmail' }
+        ]
+      },
       /* wwEditor:start */
       bindingValidation: {
         type: 'string',
@@ -113,7 +120,7 @@ export default {
             "content": "Información de entrada",
             "number": "1",
             "backgroundColor": "#E3F2FD",
-            "toolName": "Sin herramienta"
+            "toolName": "sin_herramienta"
           },
           "handles": {
             "source": ["bottom"],
@@ -130,7 +137,7 @@ export default {
             "content": "Procesamiento de información",
             "number": "2",
             "backgroundColor": "#F3E5F5",
-            "toolName": "Sin herramienta"
+            "toolName": "sin_herramienta"
           },
           "handles": {
             "source": ["bottom"],
@@ -147,7 +154,7 @@ export default {
             "content": "Información de salida",
             "number": "3",
             "backgroundColor": "#E8F5E9",
-            "toolName": "Sin herramienta"
+            "toolName": "sin_herramienta"
           },
           "handles": {
             "source": ["bottom"],
