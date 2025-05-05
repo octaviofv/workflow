@@ -23,7 +23,11 @@
         @edgesDelete="onEdgesDelete"
       >
         <template #node-custom="nodeProps">
-          <CustomNode v-bind="nodeProps" @update:data="onNodeDataUpdate" />
+          <CustomNode 
+            v-bind="nodeProps" 
+            :tool-options="content.toolOptions"
+            @update:data="onNodeDataUpdate" 
+          />
         </template>
 
         <Background :pattern-color="backgroundColor" :gap="backgroundGap" />

@@ -63,7 +63,7 @@
 
 <script>
 import { Handle } from '@vue-flow/core';
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
   name: 'CustomNode',
@@ -83,6 +83,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    toolOptions: {
+      type: Array,
+      default: () => ['Sin herramienta', 'Hubspot', 'Gmail', 'Outlook'],
+    },
   },
   emits: ['update:data'],
   setup(props, { emit }) {
@@ -99,15 +103,6 @@ export default {
     const editedToolName = ref('');
     const labelInput = ref(null);
     const contentTextarea = ref(null);
-
-    // Get toolOptions from the root component's content prop
-    const toolOptions = computed(() => {
-      const rootComponent = document.querySelector('ww-flow-chart');
-      if (rootComponent && rootComponent.__vueParentComponent?.ctx?.content?.toolOptions) {
-        return rootComponent.__vueParentComponent.ctx.content.toolOptions;
-      }
-      return ['Sin herramienta', 'Hubspot', 'Gmail', 'Outlook']; // Fallback options
-    });
 
     const startEditing = () => {
       editedLabel.value = props.data.label || '';
@@ -164,7 +159,6 @@ export default {
       editedLabel,
       editedContent,
       editedToolName,
-      toolOptions,
       labelInput,
       contentTextarea,
       startEditing,
