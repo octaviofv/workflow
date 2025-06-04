@@ -323,6 +323,11 @@ export default {
       name: 'flowSaved',
       label: { en: 'On Flow Saved' },
       event: { flowData: null },
+    },
+    {
+      name: 'flowManuallySaved',
+      label: { en: 'On Flow Manually Saved' },
+      event: { flowData: null },
     }
   ],
   actions: [
