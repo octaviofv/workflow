@@ -223,6 +223,11 @@ export default {
           flowData: stringifiedData
         };
         emit('update:content', updatedContent);
+        // Emit flowSaved event with the updated flow data
+        emit('trigger-event', { 
+          name: 'flowSaved', 
+          event: { flowData: stringifiedData }
+        });
       }
     }, { deep: true });
 
