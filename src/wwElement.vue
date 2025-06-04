@@ -36,6 +36,9 @@
       </VueFlow>
 
       <div class="zoom-controls">
+        <button class="zoom-button save-button" @click="saveFlow">
+          Guardar
+        </button>
         <button class="zoom-button" @click="zoomIn" title="Acercar">+</button>
         <button class="zoom-button" @click="zoomOut" title="Alejar">-</button>
       </div>
@@ -117,6 +120,20 @@ export default {
     const backgroundGap = computed(() => props.content?.backgroundGap || 20);
     const showMinimap = computed(() => props.content?.showMinimap ?? true);
     const backgroundColor = computed(() => props.content?.backgroundColor || '#f5f5f5');
+
+    const saveFlow = () => {
+      const nodes = elements.value.filter(el => !el.source);
+      const edges = elements.value.filter(el => el.source);
+      const flowData = {
+        nodes,
+        edges
+      };
+      const stringifiedData = JSON.stringify(flowData, null, 2);
+      emit('trigger-event', { 
+        name: 'flowManuallySaved', 
+        event: { flowData: stringifiedData }
+      });
+    };
 
     const zoomIn = () => {
       vueFlowZoomIn();
@@ -353,6 +370,7 @@ export default {
       onNodeDataUpdate,
       zoomIn,
       zoomOut,
+      saveFlow,
     };
   },
 };
@@ -456,6 +474,13 @@ export default {
 
   &:active {
     background: #E9E9E8;
+  }
+
+  &.save-button {
+    width: auto;
+    padding: 0 12px;
+    font-size: 14px;
+    font-weight: 500;
   }
 }
 </style>
