@@ -101,6 +101,12 @@ export default {
       defaultEdgeOptions: {
         type: 'smoothstep',
         animated: true,
+        markerEnd: {
+          type: 'arrow',
+          color: '#37352F',
+          width: 20,
+          height: 20,
+        },
       },
     });
 
@@ -169,14 +175,26 @@ export default {
           source: 'input',
           target: 'process',
           type: 'smoothstep',
-          animated: true
+          animated: true,
+          markerEnd: {
+            type: 'arrow',
+            color: '#37352F',
+            width: 20,
+            height: 20,
+          }
         },
         {
           id: 'e2-3',
           source: 'process',
           target: 'output',
           type: 'smoothstep',
-          animated: true
+          animated: true,
+          markerEnd: {
+            type: 'arrow',
+            color: '#37352F',
+            width: 20,
+            height: 20,
+          }
         }
       ]
     };
@@ -292,6 +310,12 @@ export default {
           ...connection,
           type: 'smoothstep',
           animated: true,
+          markerEnd: {
+            type: 'arrow',
+            color: '#37352F',
+            width: 20,
+            height: 20,
+          },
         };
         
         addEdges([newEdge]);
