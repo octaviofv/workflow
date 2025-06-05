@@ -339,8 +339,8 @@ export default {
   pointer-events: none;
 
   :deep(.vue-flow__handle) {
-    width: 6px;
-    height: 6px;
+    width: 9px;
+    height: 9px;
     background: #FFFFFF;
     border: 1px solid #37352F;
     border-radius: 50%;
