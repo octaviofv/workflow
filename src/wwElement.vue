@@ -46,7 +46,7 @@
 <script>
 // En la sección de importaciones
 import { ref, computed, watch, onMounted } from 'vue';
-import { VueFlow, useVueFlow, Panel } from '@vue-flow/core';
+import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
@@ -67,7 +67,6 @@ export default {
     Background,
     Controls,
     MiniMap,
-    Panel,
     CustomNode,
     Sidebar,
   },
