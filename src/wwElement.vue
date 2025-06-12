@@ -1,39 +1,32 @@
 <template>
   <div class="flowchart-container" :style="containerStyle">
     <div class="flowchart-wrapper">
-      <Sidebar class="flowchart-sidebar" />
-      <VueFlow
-        v-if="initialized"
-        v-model="elements"
-        :default-zoom="defaultZoom"
-        :min-zoom="minZoom"
-        :max-zoom="maxZoom"
-        :fit-view-on-init="true"
-        :nodes-draggable="!isEditing"
-        :nodes-connectable="!isEditing"
-        :elements-selectable="!isEditing"
-        class="flowchart"
-        @nodeClick="onNodeClick"
-        @connect="onConnect"
-        @paneClick="onPaneClick"
-        @dragover="onDragOver"
-        @drop="onDrop"
-        @nodeDragStop="onNodeDragStop"
-        @nodesDelete="onNodesDelete"
-        @edgesDelete="onEdgesDelete"
-      >
-        <template #node-custom="nodeProps">
-          <CustomNode 
-            v-bind="nodeProps" 
-            :tool-options="content.toolOptions"
-            @update:data="onNodeDataUpdate" 
-          />
-        </template>
-
-        <Background :pattern-color="backgroundColor" :gap="backgroundGap" />
-        <Controls />
-        <MiniMap v-if="showMinimap" />
-      </VueFlow>
+      <Sidebar class="flowchart-sidebar" :available-tools="content.toolOptions" />
+      <div class="vue-flow-wrapper" ref="flowWrapper">
+        <VueFlow
+          v-if="initialized"
+          v-model="elements"
+          :default-zoom="defaultZoom"
+          :min-zoom="minZoom"
+          :max-zoom="maxZoom"
+          :fit-view-on-init="true"
+          :node-types="nodeTypes"
+          :default-edge-options="defaultEdgeOptions"
+          class="flowchart"
+          @node-click="onNodeClick"
+          @connect="onConnect"
+          @pane-click="onPaneClick"
+          @dragover="onDragOver"
+          @drop="onDrop"
+          @node-drag-stop="onNodeDragStop"
+          @edges-delete="onEdgesDelete"
+          @nodes-delete="onNodesDelete"
+        >
+          <Background :pattern-color="backgroundColor" :gap="backgroundGap" />
+          <Controls />
+          <MiniMap v-if="showMinimap" />
+        </VueFlow>
+      </div>
 
       <div class="zoom-controls">
         <button class="zoom-button" @click="zoomIn" title="Acercar">+</button>
@@ -44,12 +37,12 @@
 </template>
 
 <script>
-// En la sección de importaciones
 import { ref, computed, watch, onMounted } from 'vue';
 import { VueFlow, useVueFlow } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
+import { v4 as uuidv4 } from 'uuid';
 
 // Importaciones de estilos
 import '@vue-flow/core/dist/style.css';
@@ -88,6 +81,7 @@ export default {
     const initialized = ref(false);
     const elements = ref([]);
     const selectedNode = ref(null);
+    const flowWrapper = ref(null);
 
     const isEditing = computed(() => {
       /* wwEditor:start */
@@ -96,18 +90,37 @@ export default {
       return false;
     });
 
-    const { findNode, addNodes, addEdges, removeNodes, project, zoomIn: vueFlowZoomIn, zoomOut: vueFlowZoomOut } = useVueFlow({
-      defaultEdgeOptions: {
-        type: 'smoothstep',
-        animated: true,
-        markerEnd: {
-          type: 'arrow',
-          color: '#37352F',
-          width: 20,
-          height: 20,
-        },
+    // Node types registration
+    const nodeTypes = {
+      custom: CustomNode
+    };
+
+    const defaultEdgeOptions = computed(() => ({
+      type: 'smoothstep',
+      animated: true,
+      markerEnd: {
+        type: 'arrow',
+        color: '#37352F',
+        width: 20,
+        height: 20,
       },
-    });
+    }));
+
+    const { 
+      findNode, 
+      addNodes, 
+      addEdges, 
+      getNodes, 
+      getEdges,
+      setNodes,
+      setEdges,
+      removeNodes, 
+      removeEdges,
+      project, 
+      zoomIn: vueFlowZoomIn, 
+      zoomOut: vueFlowZoomOut,
+      updateNode
+    } = useVueFlow();
 
     const containerStyle = computed(() => ({
       height: props.content?.height || '600px',
@@ -207,32 +220,38 @@ export default {
           ? JSON.parse(newFlowData) 
           : newFlowData;
 
-        const currentData = {
-          nodes: elements.value.filter(el => !el.source),
-          edges: elements.value.filter(el => el.source)
-        };
-
-        if (JSON.stringify(currentData) !== JSON.stringify(parsedData)) {
-          elements.value = [
-            ...(parsedData.nodes || []),
-            ...(parsedData.edges || [])
-          ];
+        if (parsedData.nodes && Array.isArray(parsedData.nodes)) {
+          // Ensure all nodes have the correct type
+          const nodes = parsedData.nodes.map(node => ({
+            ...node,
+            type: 'custom',
+            data: {
+              ...node.data,
+              label: node.data?.label || 'Unnamed Node',
+              content: node.data?.content || '',
+              backgroundColor: node.data?.backgroundColor || '#ffffff',
+            }
+          }));
+          
+          setNodes(nodes);
+        }
+        
+        if (parsedData.edges && Array.isArray(parsedData.edges)) {
+          setEdges(parsedData.edges);
         }
       } catch (error) {
         console.error('Error parsing flow data:', error);
       }
     }, { deep: true });
 
-    watch(elements, () => {
-      const nodes = elements.value.filter(el => !el.source);
-      const edges = elements.value.filter(el => el.source);
-
+    // Update flowData when nodes or edges change
+    watch([() => getNodes().value, () => getEdges().value], ([nodes, edges]) => {
       const flowData = {
         nodes,
         edges
       };
 
-      const stringifiedData = JSON.stringify(flowData, null, 2);
+      const stringifiedData = JSON.stringify(flowData);
       
       if (stringifiedData !== props.content.flowData) {
         const updatedContent = {
@@ -243,7 +262,7 @@ export default {
         // Emit flowSaved event with the updated flow data
         emit('trigger-event', { 
           name: 'flowSaved', 
-          event: { flowData: stringifiedData }
+          event: { flowData }
         });
       }
     }, { deep: true });
@@ -255,28 +274,40 @@ export default {
             ? JSON.parse(props.content.flowData) 
             : props.content.flowData;
           
-          elements.value = [
-            ...(parsedData.nodes || []),
-            ...(parsedData.edges || [])
-          ];
+          if (parsedData.nodes && Array.isArray(parsedData.nodes)) {
+            // Ensure all nodes have the correct type
+            const nodes = parsedData.nodes.map(node => ({
+              ...node,
+              type: 'custom',
+              data: {
+                ...node.data,
+                label: node.data?.label || 'Unnamed Node',
+                content: node.data?.content || '',
+                backgroundColor: node.data?.backgroundColor || '#ffffff',
+              }
+            }));
+            
+            setNodes(nodes);
+          }
+          
+          if (parsedData.edges && Array.isArray(parsedData.edges)) {
+            setEdges(parsedData.edges);
+          }
         } else {
-          elements.value = [
-            ...defaultFlow.nodes,
-            ...defaultFlow.edges
-          ];
+          // Use default flow
+          setNodes(defaultFlow.nodes);
+          setEdges(defaultFlow.edges);
         }
+        
         initialized.value = true;
       } catch (error) {
         console.error('Error initializing flow data:', error);
-        elements.value = [
-          ...defaultFlow.nodes,
-          ...defaultFlow.edges
-        ];
+        // Fallback to default flow
+        setNodes(defaultFlow.nodes);
+        setEdges(defaultFlow.edges);
         initialized.value = true;
       }
     });
-
-    const generateId = () => `node_${Date.now()}`;
 
     const onDragOver = (event) => {
       event.preventDefault();
@@ -284,17 +315,47 @@ export default {
     };
 
     const onDrop = (event) => {
-      const data = JSON.parse(event.dataTransfer.getData('application/vueflow'));
-      const position = project({ x: event.clientX, y: event.clientY });
-
-      const newNode = {
-        id: generateId(),
-        ...data,
-        position,
-      };
-
-      addNodes([newNode]);
-      emit('trigger-event', { name: 'nodeAdded', event: { node: newNode } });
+      if (!isEditing.value) return;
+      
+      event.preventDefault();
+      
+      const data = event.dataTransfer.getData('application/vueflow');
+      if (!data) return;
+      
+      try {
+        const nodeTemplate = JSON.parse(data);
+        
+        // Get the drop position in the pane coordinates
+        const bounds = flowWrapper.value.getBoundingClientRect();
+        const position = project({
+          x: event.clientX - bounds.left,
+          y: event.clientY - bounds.top
+        });
+        
+        // Create a new node
+        const newNode = {
+          id: `node-${uuidv4()}`,
+          type: 'custom',
+          position,
+          data: {
+            ...nodeTemplate,
+            label: nodeTemplate.label || 'New Node',
+            content: nodeTemplate.content || '',
+            backgroundColor: nodeTemplate.backgroundColor || '#ffffff',
+            width: 200,
+            height: 100
+          }
+        };
+        
+        addNodes([newNode]);
+        
+        emit('trigger-event', {
+          name: 'nodeAdded',
+          event: { node: newNode }
+        });
+      } catch (error) {
+        console.error('Error adding node:', error);
+      }
     };
 
     const onNodeClick = (event, node) => {
@@ -305,7 +366,7 @@ export default {
     const onConnect = (connection) => {
       if (connection?.source && connection?.target) {
         const newEdge = {
-          id: `edge-${connection.source}-${connection.target}`,
+          id: `edge-${uuidv4()}`,
           ...connection,
           type: 'smoothstep',
           animated: true,
@@ -328,29 +389,42 @@ export default {
     };
 
     const onNodeDragStop = (event, node) => {
-      const updatedNode = findNode(node.id);
-      if (updatedNode) {
-        emit('trigger-event', { name: 'nodeMoved', event: { node: updatedNode } });
-      }
+      updateNode(node.id, { position: node.position });
+      
+      emit('trigger-event', {
+        name: 'nodeMoved',
+        event: { node }
+      });
     };
 
     const onNodesDelete = (nodes) => {
-      nodes.forEach(node => {
-        emit('trigger-event', { name: 'nodeDeleted', event: { nodeId: node.id } });
+      emit('trigger-event', {
+        name: 'nodesDeleted',
+        event: { nodes }
       });
     };
 
     const onEdgesDelete = (edges) => {
-      edges.forEach(edge => {
-        emit('trigger-event', { name: 'edgeDeleted', event: { edgeId: edge.id } });
+      emit('trigger-event', {
+        name: 'edgesDeleted',
+        event: { edges }
       });
     };
 
     const onNodeDataUpdate = (nodeId, newData) => {
       const node = findNode(nodeId);
       if (node) {
-        node.data = { ...node.data, ...newData };
-        emit('trigger-event', { name: 'nodeUpdated', event: { node } });
+        updateNode(nodeId, {
+          data: {
+            ...node.data,
+            ...newData
+          }
+        });
+        
+        emit('trigger-event', {
+          name: 'nodeUpdated',
+          event: { node: findNode(nodeId) }
+        });
       }
     };
 
@@ -358,6 +432,9 @@ export default {
       elements,
       initialized,
       isEditing,
+      flowWrapper,
+      nodeTypes,
+      defaultEdgeOptions,
       containerStyle,
       defaultZoom,
       minZoom,
@@ -399,8 +476,14 @@ export default {
   background: #FFFFFF;
 }
 
-.flowchart {
+.vue-flow-wrapper {
   flex-grow: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.flowchart {
+  width: 100%;
   height: 100%;
 
   :deep(.vue-flow__node) {
