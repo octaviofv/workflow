@@ -38,9 +38,16 @@
 
 <script>
 import { ref, computed, watch, onMounted, nextTick } from 'vue';
-import { VueFlow, useVueFlow, Background, MiniMap, Controls, Panel } from '@vue-flow/core';
-import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash';
+import { 
+  VueFlow, 
+  useVueFlow,
+  Background, 
+  Controls, 
+  MiniMap, 
+  Panel 
+} from '@vue-flow/core';
+//import { v4 as uuidv4 } from 'uuid';
+//import { cloneDeep } from 'lodash';
 
 // Import custom components
 import CustomNode from './components/CustomNode.vue';
