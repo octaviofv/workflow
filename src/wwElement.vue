@@ -44,20 +44,22 @@
 </template>
 
 <script>
+// En la sección de importaciones
 import { ref, computed, watch, onMounted } from 'vue';
 import { VueFlow, useVueFlow, Panel } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
 
+// Importaciones de estilos
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
-import '@vue-flow/background/dist/style.css'; // Añade esta línea
+import '@vue-flow/background/dist/style.css';
 import '@vue-flow/controls/dist/style.css';
 import '@vue-flow/minimap/dist/style.css';
 import CustomNode from './components/CustomNode.vue';
 import Sidebar from './components/Sidebar.vue';
-
+  
 export default {
   name: 'FlowChart',
   components: {
